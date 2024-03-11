@@ -6,7 +6,7 @@
 
 ## Overview
 
-This datapack allows mapmakers to deploy PyTorch neural networks in Minecraft. A Python script ``convert.py`` is provided, which converts a PyTorch model to an mcfunction file. This file is used by the datapack to load the model into the game. The datapack can recreate neural networks and perform inference.
+This datapack allows mapmakers to deploy neural networks in Minecraft. Python script ``convert.py`` is provided, which converts a PyTorch model to an mcfunction file. This file is used by the datapack to load the model into the game. The datapack can recreate neural networks and perform inference.
 
 ## Downloading and Installing
 
