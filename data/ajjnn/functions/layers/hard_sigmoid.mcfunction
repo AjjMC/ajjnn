@@ -1,0 +1,1 @@
+function ajjnn:math/hard_sigmoid_vector

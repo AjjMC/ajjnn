@@ -1,0 +1,1 @@
+tellraw @s {"text":"https://github.com/AjjMC/ajjnn","color":"green","clickEvent":{"action":"open_url","value":"https://github.com/AjjMC/ajjnn"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}
