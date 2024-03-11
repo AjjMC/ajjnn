@@ -60,7 +60,7 @@ A canvas demo has been provided that allows the user to draw digits through rayc
 | ``ajjnn:nn output``     | Model output               | Integer or Double List |
 | ``ajjnn:nn parameters`` | Number of model parameters | Integer                |
 | ``ajjnn:nn sequence``   | Model layers               | Compound List          |
-| ``ajjnn:nn status``     | Model status               | Boolean (Byte)         |
+| ``ajjnn:nn status``     | Model status               | Byte                   |
 
 The currently loaded model's architecture and parameters are stored in the ``ajjnn:nn sequence`` NBT tag. Mapmakers can set the input ``ajjnn:nn input``, perform a forward pass with ``/function ajjnn:__forward`` and retrieve the output ``ajjnn:nn output``. The status of the model is determined by the ``ajjnn:nn status`` NBT tag. If this value is set to ``0b``, the model is idle and can be used. If it is set to ``1b``, the model is running and cannot be used. Once the output has been calculated, this value is set to ``2b`` for a single tick and then back to ``0b``.
 
