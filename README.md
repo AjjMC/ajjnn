@@ -49,7 +49,7 @@ To test the datapack, a simple model for handwritten digit classification was tr
 
 A canvas demo has been provided that allows the user to draw digits through raycasting. The canvas can be placed or relocated with ``/function ajjnn:__demo/place_canvas`` and removed with ``/function ajjnn:__demo/remove_canvas``. A brush and eraser kit can be obtained with ``/function ajjnn:__demo/kit``. To be more intuitive, the demo uses white for pixels not drawn and black for drawn pixels. Furthermore, the drawable area of the canvas is restricted to 20x20 pixels, which gives better results as the original dataset had been padded. On top of the canvas, there is a gray arrow facing south, indicating the direction one should be facing when drawing digits. The demo has been designed to perform inference as the user is drawing digits, giving real-time feedback on the user's actionbar.
 
-> **NOTE:** This is a very simple neural network architecture, constrained by the computational limitations associated with datapacks! Classification may often not be correct depending on one's writing. When I test it, it almost always gives the right prediction for all digits but 7 and 9.
+> **NOTE:** This is a very simple neural network architecture, constrained by the computational limitations associated with datapacks! Classification may often not be correct depending on one's own handwriting. When I test it, it almost always gives the right prediction for all digits but 7 and 9.
 
 ## Running Neural Networks
 
