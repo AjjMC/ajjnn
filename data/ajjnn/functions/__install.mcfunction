@@ -11,4 +11,8 @@ data modify storage ajjnn:nn input set value []
 data modify storage ajjnn:nn sequence set value []
 data modify storage ajjnn:nn output set value []
 
-tellraw @a [{"text":"Installed "},{"text":"ajjnn","color":"gray"}]
+tellraw @a [{"text":"Installed "},{"text":"ajjnn\n","color":"gray"}]
+
+execute as @a run function ajjnn:__copyright
+
+tellraw @a [{"text":"\nType "},{"text":"/function ajjnn:__help","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__help"},"hoverEvent":{"action":"show_text","contents":"Click Here"}},{"text":" for help"}]
