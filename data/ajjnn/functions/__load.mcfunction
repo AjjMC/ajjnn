@@ -11,3 +11,5 @@ execute if data storage ajjnn:nn {sequence:[]} run return fail
 tellraw @a {"text":"Loaded PyTorch model"}
 
 function ajjnn:__view
+
+tellraw @a {"text":"(Use a single underscore to hide feedback)","color":"yellow"}
