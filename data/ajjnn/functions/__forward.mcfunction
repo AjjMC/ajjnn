@@ -9,6 +9,6 @@ execute unless data storage ajjnn:nn {status:0b} run return fail
 
 tellraw @a {"text":"Performing forward pass..."}
 
-tellraw @a {"text":"(Use a single underscore to hide feedback)","color":"yellow"}
-
 function ajjnn:_forward
+
+tellraw @a {"text":"(Use a single underscore to hide feedback)","color":"yellow"}
