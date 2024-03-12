@@ -1,8 +1,8 @@
 # A Neural Network Deployment Library for Minecraft Mapmaking
 
-> **IN PROGRESS**
+> **THIS IS A DEMO**
 >
-> **The datapack is still in development. This repository has been published as an early showcase for Minecraft 1.20.4.**
+> **The datapack is still under development. This repository has been published as an early preview for Minecraft 1.20.4.**
 
 ## Overview
 
