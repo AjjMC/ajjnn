@@ -1,5 +1,5 @@
-execute unless data storage ajjnn:nn name run tellraw @s [{"text":"Unable to place canvas; ","color":"red"},{"text":"ajjnn","color":"gray"},{"text":" is not installed","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__install"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}]
-execute unless data storage ajjnn:nn name run return fail
+execute unless data storage ajjnn:data version run tellraw @s [{"text":"Unable to place canvas; ","color":"red"},{"text":"ajjnn","color":"gray"},{"text":" is not installed","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__install"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}]
+execute unless data storage ajjnn:data version run return fail
 
 execute at @e[type=minecraft:marker,tag=ajjnn.canvas] run fill ~ ~ ~ ~-27 ~ ~-27 minecraft:air
 kill @e[type=minecraft:marker,tag=ajjnn.canvas]

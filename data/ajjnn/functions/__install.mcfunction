@@ -1,17 +1,23 @@
-schedule clear ajjnn:nn/layers/forward
-schedule clear ajjnn:nn/demo/forward
+schedule clear ajjnn:control/demo/forward
+schedule clear ajjnn:control/layers/forward
+schedule clear ajjnn:control/layers/finish
+schedule clear ajjnn:control/math/transform_vector_elements
 
 scoreboard objectives add ajjnn dummy
 scoreboard objectives add ajjnn.canvas minecraft.used:minecraft.carrot_on_a_stick
 
-data modify storage ajjnn:nn name set value ""
-data modify storage ajjnn:nn parameters set value 0
-data modify storage ajjnn:nn status set value 0b
-data modify storage ajjnn:nn input set value []
-data modify storage ajjnn:nn sequence set value []
-data modify storage ajjnn:nn output set value []
+data modify storage ajjnn:data name set value ""
+data modify storage ajjnn:data parameters set value 0
+data modify storage ajjnn:data status set value 0b
+data modify storage ajjnn:data input set value []
+data modify storage ajjnn:data sequence set value []
+data modify storage ajjnn:data output set value []
 
-tellraw @a [{"text":"Installed "},{"text":"ajjnn\n","color":"gray"}]
+function ajjnn:installation/set_version
+data modify storage ajjnn:data version set from storage ajjnn:temp version
+
+tellraw @a [{"text":"Installed "},{"text":"ajjnn","color":"gray"}]
+tellraw @a [{"text":"Version: "},{"nbt":"version","storage":"ajjnn:data","color":"gray"},{"text":"\n"}]
 
 execute as @a run function ajjnn:__copyright
 

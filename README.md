@@ -1,8 +1,8 @@
 # A Neural Network Deployment Library for Minecraft Mapmaking
 
-> **THIS IS A DEMO**
+> **AVAILABLE ON 1.20.5+**
 >
-> **The datapack is still under development. This repository has been published as an early preview for Minecraft 1.20.4.**
+> **Please report any bugs in the issues section.**
 
 ## Overview
 
@@ -55,14 +55,14 @@ A canvas demo has been provided that allows the user to draw digits through rayc
 
 | Data Storage NBT        | Description                | Type                   |
 |:------------------------|:---------------------------|:-----------------------|
-| ``ajjnn:nn input``      | Model input                | Double List            |
-| ``ajjnn:nn name``       | Model name                 | String                 |
-| ``ajjnn:nn output``     | Model output               | Integer or Double List |
-| ``ajjnn:nn parameters`` | Number of model parameters | Integer                |
-| ``ajjnn:nn sequence``   | Model layers               | Compound List          |
-| ``ajjnn:nn status``     | Model status               | Byte                   |
+| ``ajjnn:data input``      | Model input                | Double List            |
+| ``ajjnn:data name``       | Model name                 | String                 |
+| ``ajjnn:data output``     | Model output               | Integer or Double List |
+| ``ajjnn:data parameters`` | Number of model parameters | Integer                |
+| ``ajjnn:data sequence``   | Model layers               | Compound List          |
+| ``ajjnn:data status``     | Model status               | Byte                   |
 
-The currently loaded model's architecture and parameters are stored in the ``ajjnn:nn sequence`` NBT tag. Mapmakers can set the input ``ajjnn:nn input``, perform a forward pass with ``/function ajjnn:__forward`` and retrieve the output ``ajjnn:nn output``. The status of the model is determined by the ``ajjnn:nn status`` NBT tag. If this value is set to ``0b``, the model is idle and can be used. If it is set to ``1b``, the model is running and cannot be used. Once the output has been calculated, this value is set to ``2b`` for a single tick and then back to ``0b``.
+The currently loaded model's architecture and parameters are stored in the ``ajjnn:data sequence`` NBT tag. Mapmakers can set the input ``ajjnn:data input``, perform a forward pass with ``/function ajjnn:__forward`` and retrieve the output ``ajjnn:data output``. The status of the model is determined by the ``ajjnn:data status`` NBT tag. If this value is set to ``0b``, the model is idle and can be used. If it is set to ``1b``, the model is running and cannot be used. Once the output has been calculated, this value is set to ``2b`` for a single tick and then back to ``0b``.
 
 ## Copyright
 

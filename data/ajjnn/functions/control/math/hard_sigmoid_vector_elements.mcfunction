@@ -1,6 +1,6 @@
 data modify storage ajjnn:math x1 set from storage ajjnn:math v1[0]
 
-function ajjnn:nn/math/relu_double
+function ajjnn:control/math/hard_sigmoid_double
 
 data modify storage ajjnn:math v1 append from storage ajjnn:math v1[0]
 
@@ -10,4 +10,4 @@ data modify storage ajjnn:math u append from storage ajjnn:math y
 
 scoreboard players add #count ajjnn 1
 
-execute if score #count ajjnn < #length ajjnn run function ajjnn:nn/math/relu_vector_elements
+execute if score #count ajjnn < #length ajjnn run function ajjnn:control/math/hard_sigmoid_vector_elements

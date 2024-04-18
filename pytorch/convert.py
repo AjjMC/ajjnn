@@ -21,23 +21,23 @@ def main(model_path: str, model_name: str) -> None:
 
     with open(converted_model_path, "w") as f:
         set_model_name = (
-            f'data modify storage ajjnn:nn name set value "{model_name}"\n\n'
+            f'data modify storage ajjnn:data name set value "{model_name}"\n\n'
         )
 
-        set_num_params = f"data modify storage ajjnn:nn parameters set value {sum(p.numel() for p in model.parameters())}\n\n"
+        set_num_params = f"data modify storage ajjnn:data parameters set value {sum(p.numel() for p in model.parameters())}\n\n"
 
         add_linear_layer = (
-            'data modify storage ajjnn:nn sequence append value {layer:"linear"}\n\n'
+            'data modify storage ajjnn:data sequence append value {layer:"linear"}\n\n'
         )
 
         add_relu_layer = (
-            'data modify storage ajjnn:nn sequence append value {layer:"relu"}\n\n'
+            'data modify storage ajjnn:data sequence append value {layer:"relu"}\n\n'
         )
 
-        add_hard_sigmoid_layer = 'data modify storage ajjnn:nn sequence append value {layer:"hard_sigmoid"}\n\n'
+        add_hard_sigmoid_layer = 'data modify storage ajjnn:data sequence append value {layer:"hard_sigmoid"}\n\n'
 
         add_argmax_layer = (
-            'data modify storage ajjnn:nn sequence append value {layer:"argmax"}\n\n'
+            'data modify storage ajjnn:data sequence append value {layer:"argmax"}\n\n'
         )
 
         f.write(set_model_name)
@@ -58,9 +58,9 @@ def main(model_path: str, model_name: str) -> None:
 
                 biases_formatted = f"[{biases_formatted_inside}]"
 
-                set_linear_layer_weights = f"data modify storage ajjnn:nn sequence[{i}].weights set value {weights_formatted}\n\n"
+                set_linear_layer_weights = f"data modify storage ajjnn:data sequence[{i}].weights set value {weights_formatted}\n\n"
 
-                set_linear_layer_biases = f"data modify storage ajjnn:nn sequence[{i}].biases set value {biases_formatted}\n\n"
+                set_linear_layer_biases = f"data modify storage ajjnn:data sequence[{i}].biases set value {biases_formatted}\n\n"
 
                 f.write(add_linear_layer)
                 f.write(set_linear_layer_weights)

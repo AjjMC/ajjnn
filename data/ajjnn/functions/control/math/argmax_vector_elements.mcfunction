@@ -8,4 +8,4 @@ data remove storage ajjnn:math v1[0]
 
 scoreboard players add #count ajjnn 1
 
-execute if score #count ajjnn < #length ajjnn run function ajjnn:nn/math/argmax_vector_elements
+execute if score #count ajjnn < #length ajjnn run function ajjnn:control/math/argmax_vector_elements

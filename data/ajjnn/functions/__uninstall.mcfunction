@@ -1,8 +1,10 @@
 execute at @e[type=minecraft:marker,tag=ajjnn.canvas] run fill ~ ~ ~ ~-27 ~ ~-27 minecraft:air
 kill @e[type=minecraft:marker,tag=ajjnn.canvas]
 
-schedule clear ajjnn:nn/layers/forward
-schedule clear ajjnn:nn/demo/forward
+schedule clear ajjnn:control/demo/forward
+schedule clear ajjnn:control/layers/forward
+schedule clear ajjnn:control/layers/finish
+schedule clear ajjnn:control/math/transform_vector_elements
 
 scoreboard players reset #column_count ajjnn
 scoreboard players reset #columns ajjnn
@@ -23,6 +25,14 @@ scoreboard players reset #sum ajjnn
 scoreboard objectives remove ajjnn
 scoreboard objectives remove ajjnn.canvas
 
+data remove storage ajjnn:data input
+data remove storage ajjnn:data name
+data remove storage ajjnn:data output
+data remove storage ajjnn:data parameters
+data remove storage ajjnn:data sequence
+data remove storage ajjnn:data status
+data remove storage ajjnn:data version
+
 data remove storage ajjnn:math b
 data remove storage ajjnn:math M
 data remove storage ajjnn:math u
@@ -32,16 +42,10 @@ data remove storage ajjnn:math x1
 data remove storage ajjnn:math x2
 data remove storage ajjnn:math y
 
-data remove storage ajjnn:nn input
-data remove storage ajjnn:nn name
-data remove storage ajjnn:nn output
-data remove storage ajjnn:nn parameters
-data remove storage ajjnn:nn sequence
-data remove storage ajjnn:nn status
-
 data remove storage ajjnn:temp argument
 data remove storage ajjnn:temp layer
 data remove storage ajjnn:temp layer_name
 data remove storage ajjnn:temp layers
+data remove storage ajjnn:temp version
 
 tellraw @a [{"text":"Uninstalled "},{"text":"ajjnn","color":"gray"}]

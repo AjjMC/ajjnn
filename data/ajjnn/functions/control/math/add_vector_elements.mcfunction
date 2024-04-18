@@ -13,4 +13,4 @@ data modify storage ajjnn:math u append from storage ajjnn:math y
 
 scoreboard players add #count ajjnn 1
 
-execute if score #count ajjnn < #length ajjnn run function ajjnn:nn/math/add_vector_elements
+execute if score #count ajjnn < #length ajjnn run function ajjnn:control/math/add_vector_elements

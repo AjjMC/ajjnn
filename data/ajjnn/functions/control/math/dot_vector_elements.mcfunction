@@ -11,4 +11,4 @@ scoreboard players operation #x1 ajjnn *= #x2 ajjnn
 scoreboard players operation #sum ajjnn += #x1 ajjnn
 scoreboard players add #count ajjnn 1
 
-execute if score #count ajjnn < #length ajjnn run function ajjnn:nn/math/dot_vector_elements
+execute if score #count ajjnn < #length ajjnn run function ajjnn:control/math/dot_vector_elements
