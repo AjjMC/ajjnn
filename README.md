@@ -4,6 +4,14 @@
 >
 > **Please report any bugs in the issues section.**
 
+<p align = "center">
+  <img src="repo/mnist.gif" width="350">
+</p>
+
+<p align = "center">
+  <i>A handwritten digit classification demo.</i>
+</p>
+
 ## Overview
 
 This datapack allows mapmakers to deploy neural networks in Minecraft. A Python script is provided, which converts a PyTorch model to an mcfunction file. This file loads the model into the game, enabling the datapack to perform inference.
