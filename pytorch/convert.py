@@ -45,6 +45,12 @@ def main(model_path: str, model_name: str) -> None:
 
         for i, layer in enumerate(model):
             if isinstance(layer, torch.nn.Linear):
+                if layer.in_features > 784:
+                    raise ValueError("Number of input features cannot exceed 784")
+
+                if layer.out_features > 784:
+                    raise ValueError("Network width cannot exceed 784")
+
                 weights = layer.weight.data
                 biases = layer.bias.data
 
