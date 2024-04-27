@@ -5,7 +5,7 @@
 > **Please report any bugs in the issues section.**
 
 <p align = "center">
-  <img src="repo/mnist.gif" width="350">
+  <img src="repo/mnist.gif" width="400">
 </p>
 
 <p align = "center">
