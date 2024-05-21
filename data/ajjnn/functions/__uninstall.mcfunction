@@ -23,7 +23,6 @@ scoreboard players reset #sequence_length ajjnn
 scoreboard players reset #sum ajjnn
 
 scoreboard objectives remove ajjnn
-scoreboard objectives remove ajjnn.canvas
 
 data remove storage ajjnn:data input
 data remove storage ajjnn:data name

@@ -4,7 +4,6 @@ schedule clear ajjnn:control/layers/finish
 schedule clear ajjnn:control/math/transform_vector_elements
 
 scoreboard objectives add ajjnn dummy
-scoreboard objectives add ajjnn.canvas minecraft.used:minecraft.carrot_on_a_stick
 
 data modify storage ajjnn:data name set value ""
 data modify storage ajjnn:data parameters set value 0
