@@ -21,8 +21,6 @@ def main(batch_size: int, data_path: str, model_path: str) -> None:
 
     model = torch.load(model_path)
 
-    batch_size = 32
-
     data_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True)
 
     model.eval()

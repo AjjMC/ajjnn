@@ -16,7 +16,7 @@ def main(model_path: str, model_name: str) -> None:
     parent = os.path.dirname(os.path.abspath(__file__))
     root = os.path.dirname(parent)
     converted_model_path = os.path.join(
-        root, "data", "ajjnn", "functions", "models", f"{model_name}.mcfunction"
+        root, "data", "ajjnn", "function", "models", f"{model_name}.mcfunction"
     )
 
     with open(converted_model_path, "w") as f:
