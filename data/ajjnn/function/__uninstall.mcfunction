@@ -1,10 +1,7 @@
 execute at @e[type=minecraft:marker,tag=ajjnn.canvas] run fill ~ ~ ~ ~-27 ~ ~-27 minecraft:air
 kill @e[type=minecraft:marker,tag=ajjnn.canvas]
 
-schedule clear ajjnn:control/demo/forward
-schedule clear ajjnn:control/layers/forward
-schedule clear ajjnn:control/layers/finish
-schedule clear ajjnn:control/math/transform_vector_elements
+function ajjnn:control/clear_schedules
 
 scoreboard players reset #column_count ajjnn
 scoreboard players reset #columns ajjnn
@@ -42,6 +39,7 @@ data remove storage ajjnn:math x2
 data remove storage ajjnn:math y
 
 data remove storage ajjnn:temp argument
+data remove storage ajjnn:temp decoded
 data remove storage ajjnn:temp layer
 data remove storage ajjnn:temp layer_name
 data remove storage ajjnn:temp layers
