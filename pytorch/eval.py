@@ -12,6 +12,9 @@ def main(batch_size: int, data_path: str, model_path: str) -> None:
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    model = torch.load(model_path)
+    model.eval()
+
     dataset = tv.datasets.MNIST(
         root=data_path,
         train=False,
@@ -19,33 +22,60 @@ def main(batch_size: int, data_path: str, model_path: str) -> None:
         download=True,
     )
 
-    model = torch.load(model_path)
+    # dataset = tv.datasets.EMNIST(
+    #     root=data_path,
+    #     split="letters",
+    #     train=False,
+    #     transform=tv.transforms.Compose(
+    #         [
+    #             lambda image: tv.transforms.functional.rotate(image, -90),
+    #             lambda image: tv.transforms.functional.hflip(image),
+    #             tv.transforms.ToTensor(),
+    #         ]
+    #     ),
+    #     download=True,
+    # )
 
     data_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True)
-
-    model.eval()
 
     correct = 0
     total = 0
 
-    for images, labels in data_loader:
-        images = images.to(device)
-        images = images.view(-1, 784)
-        images = torch.where(
-            images > 0.1, torch.ones_like(images), torch.zeros_like(images)
-        )
+    with torch.inference_mode():
+        for images, labels in data_loader:
+            images = images.to(device)
+            images = images.view(-1, 784)
+            images = torch.where(
+                images > 0.1, torch.ones_like(images), torch.zeros_like(images)
+            )
 
-        labels = labels.to(device)
+            labels = labels.to(device)
 
-        outputs = model(images)
+            outputs = model(images)
 
-        predicted = torch.argmax(outputs, 1)
+            predicted = torch.argmax(outputs, 1)
 
-        total += labels.size(0)
-        correct += (predicted == labels).sum().item()
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
 
-    accuracy = 100 * correct / total
+        accuracy = 100 * correct / total
 
+        test_image = images[-1]
+        test_label = labels[-1]
+
+        tv.utils.save_image(test_image.view(1, 28, 28), "test_image.png")
+
+        classes = dataset.classes
+        model_no_softmax = torch.nn.Sequential(*(list(model.children())[:-1]))
+        predicted_array = model_no_softmax(test_image.to(device))
+        predicted_index = torch.argmax(predicted_array).item()
+        predicted_output = classes[predicted_index]
+
+    print("Predicted Classes", classes)
+    print("Predicted Array", predicted_array)
+    print("Predicted Index", predicted_index)
+    print("Predicted Output", predicted_output)
+    print("Expected Output", classes[test_label.item()])
     print(f"Accuracy: {accuracy:.2f}%")
 
 

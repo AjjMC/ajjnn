@@ -14,13 +14,6 @@ def main(
 ) -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    dataset = tv.datasets.MNIST(
-        root=data_path,
-        train=True,
-        transform=tv.transforms.ToTensor(),
-        download=True,
-    )
-
     model = torch.nn.Sequential(
         torch.nn.Linear(784, 32),
         torch.nn.ReLU(),
@@ -30,9 +23,39 @@ def main(
         torch.nn.Softmax(dim=1),
     )
 
-    model = model.to(device)
+    # model = torch.nn.Sequential(
+    #     torch.nn.Linear(784, 64),
+    #     torch.nn.ReLU(),
+    #     torch.nn.Linear(64, 64),
+    #     torch.nn.ReLU(),
+    #     torch.nn.Linear(64, 27),
+    #     torch.nn.Softmax(dim=1),
+    # )
 
+    model = model.to(device)
+    num_classes = model[-2].out_features
     optim = torch.optim.Adam(model.parameters(), lr=learning_rate)
+
+    dataset = tv.datasets.MNIST(
+        root=data_path,
+        train=True,
+        transform=tv.transforms.ToTensor(),
+        download=True,
+    )
+
+    # dataset = tv.datasets.EMNIST(
+    #     root=data_path,
+    #     split="letters",
+    #     train=True,
+    #     transform=tv.transforms.Compose(
+    #         [
+    #             lambda image: tv.transforms.functional.rotate(image, -90),
+    #             lambda image: tv.transforms.functional.hflip(image),
+    #             tv.transforms.ToTensor(),
+    #         ]
+    #     ),
+    #     download=True,
+    # )
 
     data_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True)
 
@@ -49,7 +72,9 @@ def main(
             )
 
             labels = labels.to(device)
-            labels = torch.nn.functional.one_hot(labels, num_classes=10).float()
+            labels = torch.nn.functional.one_hot(
+                labels, num_classes=num_classes
+            ).float()
 
             optim.zero_grad()
 
@@ -71,7 +96,7 @@ if __name__ == "__main__":
 
     args.add_argument("--learning_rate", type=float, default=1e-3)
     args.add_argument("--batch_size", type=int, default=16)
-    args.add_argument("--num_epochs", type=int, default=20)
+    args.add_argument("--num_epochs", type=int, default=10)
     args.add_argument("--data_path", type=str, default="./data")
     args.add_argument("--model_path", type=str, default="./model.pt")
 
