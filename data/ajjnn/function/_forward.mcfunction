@@ -1,4 +1,4 @@
-execute unless data storage ajjnn:data name run return fail
+execute unless data storage ajjnn:data version run return fail
 execute if data storage ajjnn:data {sequence:[]} run return fail
 execute unless data storage ajjnn:data {status:0b} run return fail
 
