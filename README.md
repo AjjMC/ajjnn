@@ -2,19 +2,20 @@
 
 > **AVAILABLE ON 1.21**
 >
-> **Please report any bugs in the issues section.**
+> **Please report any bugs in the issue section.**
 
 <p align = "center">
-  <img src="repo/mnist.gif" width="500">
+  <img src="repo/demo_mnist.gif" width="250">
+  <img src="repo/demo_emnist_letters.gif" width="250">
 </p>
 
 <p align = "center">
-  <i>A handwritten digit classification demo.</i>
+  <i>Handwritten digit and letter classification models.</i>
 </p>
 
 ## Overview
 
-This datapack allows mapmakers to deploy neural networks in Minecraft. A Python script is provided, which converts a PyTorch model to an mcfunction file. This file loads the model into the game, enabling the datapack to perform inference.
+This datapack allows mapmakers to deploy neural networks of arbitrary widths and depths in Minecraft. It functions as a black box that performs inference dynamically for a given model, without requiring any modifications. A Python script is provided, converting a trained PyTorch model to an mcfunction file used to load it into the game.
 
 ## Downloading and Installing
 
