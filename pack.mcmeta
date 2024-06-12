@@ -1,6 +1,6 @@
 {
   "pack": {
     "pack_format": 48,
-    "description": "A neural network deployment library for Minecraft mapmaking"
+    "description": "A neural network deployment library for mapmaking"
   }
 }
