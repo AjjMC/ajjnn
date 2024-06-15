@@ -2,7 +2,7 @@
 
 > **AVAILABLE ON 1.21**
 >
-> **Please report any bugs in the issue section.**
+> **Please report any bugs in the issues section.**
 
 <p align = "center">
   <img src="repo/demo_mnist.gif" width="250">
