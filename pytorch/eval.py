@@ -6,24 +6,24 @@ import torchvision as tv
 from torch.utils.data import DataLoader
 
 
-def main(batch_size: int, data_path: str, model_path: str) -> None:
+def main(batch_size: int, data_dir: str, model_path: str) -> None:
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     if not os.path.exists(model_path):
         raise FileNotFoundError(f"Model {model_path} not found")
-
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model = torch.load(model_path)
     model.eval()
 
     dataset = tv.datasets.MNIST(
-        root=data_path,
+        root=data_dir,
         train=False,
         transform=tv.transforms.ToTensor(),
         download=True,
     )
 
     # dataset = tv.datasets.EMNIST(
-    #     root=data_path,
+    #     root=data_dir,
     #     split="letters",
     #     train=False,
     #     transform=tv.transforms.Compose(
@@ -83,13 +83,13 @@ if __name__ == "__main__":
     args = argparse.ArgumentParser()
 
     args.add_argument("--batch_size", type=int, default=16)
-    args.add_argument("--data_path", type=str, default="./data")
+    args.add_argument("--data_dir", type=str, default="./data")
     args.add_argument("--model_path", type=str, default="./model.pt")
 
     args = args.parse_args()
 
     main(
         batch_size=args.batch_size,
-        data_path=args.data_path,
+        data_dir=args.data_dir,
         model_path=args.model_path,
     )

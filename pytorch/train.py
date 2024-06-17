@@ -9,7 +9,7 @@ def main(
     learning_rate: float,
     batch_size: int,
     num_epochs: int,
-    data_path: str,
+    data_dir: str,
     model_path: str,
 ) -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -37,14 +37,14 @@ def main(
     optim = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
     dataset = tv.datasets.MNIST(
-        root=data_path,
+        root=data_dir,
         train=True,
         transform=tv.transforms.ToTensor(),
         download=True,
     )
 
     # dataset = tv.datasets.EMNIST(
-    #     root=data_path,
+    #     root=data_dir,
     #     split="letters",
     #     train=True,
     #     transform=tv.transforms.Compose(
@@ -63,6 +63,7 @@ def main(
 
     for epoch in range(num_epochs):
         avg_loss = 0.0
+        len_data_loader = len(data_loader)
 
         for images, labels in data_loader:
             images = images.to(device)
@@ -84,7 +85,7 @@ def main(
 
             optim.step()
 
-            avg_loss += loss.item() / len(data_loader)
+            avg_loss += loss.item() / len_data_loader
 
         print(f"Epoch {epoch} Loss: {avg_loss}")
 
@@ -97,7 +98,7 @@ if __name__ == "__main__":
     args.add_argument("--learning_rate", type=float, default=1e-3)
     args.add_argument("--batch_size", type=int, default=16)
     args.add_argument("--num_epochs", type=int, default=10)
-    args.add_argument("--data_path", type=str, default="./data")
+    args.add_argument("--data_dir", type=str, default="./data")
     args.add_argument("--model_path", type=str, default="./model.pt")
 
     args = args.parse_args()
@@ -106,6 +107,6 @@ if __name__ == "__main__":
         learning_rate=args.learning_rate,
         batch_size=args.batch_size,
         num_epochs=args.num_epochs,
-        data_path=args.data_path,
+        data_dir=args.data_dir,
         model_path=args.model_path,
     )
