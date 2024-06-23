@@ -2,8 +2,8 @@ import argparse
 import os
 
 import torch
-import torchvision as tv
 from torch.utils.data import DataLoader
+import torchvision as tv
 
 
 def main(batch_size: int, data_dir: str, model_path: str) -> None:
@@ -41,10 +41,12 @@ def main(batch_size: int, data_dir: str, model_path: str) -> None:
     correct = 0
     total = 0
 
+    print("Number of Parameters:", sum(p.numel() for p in model.parameters()))
+
     with torch.inference_mode():
         for images, labels in data_loader:
             images = images.to(device)
-            images = images.view(-1, 784)
+            images = images.view(-1, 28**2)
             images = torch.where(
                 images > 0.1, torch.ones_like(images), torch.zeros_like(images)
             )
@@ -61,21 +63,25 @@ def main(batch_size: int, data_dir: str, model_path: str) -> None:
         accuracy = 100 * correct / total
 
         test_image = images[-1]
-        test_label = labels[-1]
+        test_image = test_image.unsqueeze(0)
 
-        tv.utils.save_image(test_image.view(1, 28, 28), "test_image.png")
+        test_label = labels[-1]
+        test_label = test_label.unsqueeze(0)
+
+        tv.utils.save_image(test_image.view(1, 1, 28, 28), "test_image.png")
 
         classes = dataset.classes
         model_no_softmax = torch.nn.Sequential(*(list(model.children())[:-1]))
-        predicted_array = model_no_softmax(test_image.to(device))
+        test_image = test_image.to(device)
+        predicted_array = model_no_softmax(test_image)
         predicted_index = torch.argmax(predicted_array).item()
         predicted_output = classes[predicted_index]
 
-    print("Predicted Classes", classes)
-    print("Predicted Array", predicted_array)
-    print("Predicted Index", predicted_index)
-    print("Predicted Output", predicted_output)
-    print("Expected Output", classes[test_label.item()])
+    print("Predicted Classes:", classes)
+    print("Predicted Array:", predicted_array)
+    print("Predicted Index:", predicted_index)
+    print("Predicted Output:", predicted_output)
+    print("Expected Output:", classes[test_label.item()])
     print(f"Accuracy: {accuracy:.2f}%")
 
 

@@ -15,7 +15,7 @@ def main(
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model = torch.nn.Sequential(
-        torch.nn.Linear(784, 32),
+        torch.nn.Linear(28**2, 32),
         torch.nn.ReLU(),
         torch.nn.Linear(32, 32),
         torch.nn.ReLU(),
@@ -24,7 +24,7 @@ def main(
     )
 
     # model = torch.nn.Sequential(
-    #     torch.nn.Linear(784, 64),
+    #     torch.nn.Linear(28**2, 64),
     #     torch.nn.ReLU(),
     #     torch.nn.Linear(64, 64),
     #     torch.nn.ReLU(),
@@ -59,6 +59,7 @@ def main(
 
     data_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True)
 
+    print("Number of Parameters:", sum(p.numel() for p in model.parameters()))
     print("Training on", device)
 
     for epoch in range(num_epochs):
@@ -67,7 +68,7 @@ def main(
 
         for images, labels in data_loader:
             images = images.to(device)
-            images = images.view(-1, 784)
+            images = images.view(-1, 28**2)
             images = torch.where(
                 images > 0.1, torch.ones_like(images), torch.zeros_like(images)
             )
