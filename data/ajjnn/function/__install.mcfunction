@@ -1,13 +1,11 @@
-function ajjnn:control/clear_schedules
-
 scoreboard objectives add ajjnn dummy
 
-data modify storage ajjnn:data name set value ""
-data modify storage ajjnn:data parameters set value 0
-data modify storage ajjnn:data status set value 0b
-data modify storage ajjnn:data input set value []
-data modify storage ajjnn:data sequence set value []
-data modify storage ajjnn:data output set value []
+execute unless data storage ajjnn:data version run data modify storage ajjnn:data name set value ""
+execute unless data storage ajjnn:data version run data modify storage ajjnn:data parameters set value 0
+execute unless data storage ajjnn:data version run data modify storage ajjnn:data status set value 0b
+execute unless data storage ajjnn:data version run data modify storage ajjnn:data input set value []
+execute unless data storage ajjnn:data version run data modify storage ajjnn:data sequence set value []
+execute unless data storage ajjnn:data version run data modify storage ajjnn:data output set value []
 
 function ajjnn:installation/set_version
 data modify storage ajjnn:data version set from storage ajjnn:temp version
