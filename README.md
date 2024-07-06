@@ -63,7 +63,7 @@ A demo has been provided that allows the user to draw digits on a canvas through
 
 ## Running Neural Networks
 
-| Data Storage NBT          | Description                | Type                   |
+| Data Storage NBT Tag      | Description                | Type                   |
 |:--------------------------|:---------------------------|:-----------------------|
 | ``ajjnn:data input``      | Model input                | Double List            |
 | ``ajjnn:data name``       | Model name                 | String                 |
