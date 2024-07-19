@@ -55,7 +55,7 @@ def main(batch_size: int, data_dir: str, model_path: str) -> None:
 
             outputs = model(images)
 
-            predicted = torch.argmax(outputs, 1)
+            predicted = torch.argmax(outputs, dim=1)
 
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
