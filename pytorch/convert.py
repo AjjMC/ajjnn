@@ -4,11 +4,23 @@ import os
 import torch
 
 
-def main(model_path: str, model_name: str) -> None:
-    if not os.path.exists(model_path):
-        raise FileNotFoundError(f"Model {model_path} was not found")
+def main(params_dir: str, params_file: str, model_name: str, add_argmax: bool) -> None:
+    if not os.path.exists(params_dir):
+        raise FileNotFoundError(f"Parameter directory {params_dir} not found")
 
-    model = torch.load(model_path)
+    params_list = os.listdir(params_dir)
+    params_list = sorted(params_list, key=lambda x: int(x.split("_")[-1].split(".")[0]))
+
+    if len(params_list) == 0:
+        raise ValueError(f"Parameter directory {params_dir} is empty")
+
+    params = params_list[-1] if params_file is None else params_file
+    params_path = os.path.join(params_dir, params)
+
+    if not os.path.exists(params_path):
+        raise ValueError(f"Parameter file {params_file} does not exist")
+
+    model = torch.load(params_path)
 
     if not isinstance(model, torch.nn.Sequential):
         raise ValueError("Model must be an instance of torch.nn.Sequential")
@@ -43,7 +55,7 @@ def main(model_path: str, model_name: str) -> None:
         f.write(set_model_name)
         f.write(set_num_params)
 
-        for i, layer in enumerate(model):
+        for layer in model:
             if isinstance(layer, torch.nn.Linear):
                 if layer.in_features > 784:
                     raise ValueError("Number of input features cannot exceed 784")
@@ -64,9 +76,9 @@ def main(model_path: str, model_name: str) -> None:
 
                 biases_formatted = f"[{biases_formatted_inside}]"
 
-                set_linear_layer_weights = f"data modify storage ajjnn:data sequence[{i}].weights set value {weights_formatted}\n\n"
+                set_linear_layer_weights = f"data modify storage ajjnn:data sequence[-1].weights set value {weights_formatted}\n\n"
 
-                set_linear_layer_biases = f"data modify storage ajjnn:data sequence[{i}].biases set value {biases_formatted}\n\n"
+                set_linear_layer_biases = f"data modify storage ajjnn:data sequence[-1].biases set value {biases_formatted}\n\n"
 
                 f.write(add_linear_layer)
                 f.write(set_linear_layer_weights)
@@ -75,15 +87,17 @@ def main(model_path: str, model_name: str) -> None:
             elif isinstance(layer, torch.nn.ReLU):
                 f.write(add_relu_layer)
 
-            elif isinstance(layer, torch.nn.Hardsigmoid) or isinstance(
-                layer, torch.nn.Sigmoid
-            ):
+            elif isinstance(layer, torch.nn.Hardsigmoid):
                 f.write(add_hard_sigmoid_layer)
 
-            elif isinstance(layer, torch.nn.Softmax):
-                f.write(add_argmax_layer)
+            elif isinstance(layer, torch.nn.Dropout):
+                continue
+
             else:
                 raise ValueError(f"Layer {layer} is not supported")
+
+        if add_argmax:
+            f.write(add_argmax_layer)
 
     print(f"Model {model_name} has been converted for use in Minecraft")
     print(
@@ -91,12 +105,33 @@ def main(model_path: str, model_name: str) -> None:
     )
 
 
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+
+    if v.lower() in ("yes", "true", "t", "y", "1"):
+        return True
+
+    elif v.lower() in ("no", "false", "f", "n", "0"):
+        return False
+
+    else:
+        raise argparse.ArgumentTypeError("Expected Boolean")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--model_path", type=str, default="./model.pt")
+    parser.add_argument("--params_dir", type=str, default="./params")
+    parser.add_argument("--params_file", type=str, default=None)
     parser.add_argument("--model_name", type=str, default="model")
+    parser.add_argument("--add_argmax", type=str2bool, default=False)
 
     args = parser.parse_args()
 
-    main(model_path=args.model_path, model_name=args.model_name)
+    main(
+        params_dir=args.params_dir,
+        params_file=args.params_file,
+        model_name=args.model_name,
+        add_argmax=args.add_argmax,
+    )

@@ -5,8 +5,8 @@
 > **Please report any bugs in the issues section.**
 
 <p align = "center">
-  <img src="repo/demo_mnist.gif" width="250">
-  <img src="repo/demo_emnist_letters.gif" width="250">
+  <img src="repo/demo_digits.gif" width="250">
+  <img src="repo/demo_letters.gif" width="250">
 </p>
 
 <p align = "center">
@@ -15,7 +15,7 @@
 
 ## Overview
 
-This datapack allows mapmakers to deploy neural networks of arbitrary widths and depths in Minecraft. It functions as a black box that performs inference dynamically for a given model, without requiring any modifications. A Python script is provided, converting a trained PyTorch model to an mcfunction file used to load it into the game.
+This datapack allows mapmakers to deploy neural networks of arbitrary widths and depths in Minecraft. It functions as a black box that performs inference dynamically for a given model, without requiring any modifications. A Python script is provided, converting trained PyTorch models to standalone mcfunction files used to load them into the game.
 
 ## Downloading and Installing
 
@@ -39,29 +39,25 @@ The datapack can be downloaded from this repository by clicking on "Code" and th
 
 The datapack can be installed by running ``/function ajjnn:__install``. It can be uninstalled using ``/function ajjnn:__uninstall``, which removes all data associated with it from the world.
 
-## Technical Details
+## Converting Models
 
-The datapack is limited to models trained in PyTorch using ``torch.nn.Sequential``. The following layers are supported at the moment:
+The datapack is limited to neural networks trained in PyTorch using ``torch.nn.Sequential``. The following layers are supported at the moment:
 
-| Datapack Layer | Pytorch Layer Based On                         |
-|:---------------|:-----------------------------------------------|
-| Argmax         | ``torch.nn.Softmax``                           |
-| Hard Sigmoid   | ``torch.nn.HardSigmoid``, ``torch.nn.Sigmoid`` |
-| Linear         | ``torch.nn.Linear``                            |
-| ReLU           | ``torch.nn.ReLU``                              |
+| Datapack Layer | Pytorch Layer Based On   |
+|:---------------|:-------------------------|
+| Hard Sigmoid   | ``torch.nn.HardSigmoid`` |
+| Linear         | ``torch.nn.Linear``      |
+| ReLU           | ``torch.nn.ReLU``        |
 
-The provided Python script ``convert.py`` maps the PyTorch layers on the right to the datapack layers on the left. The model parameters are rounded to a three decimal point precision to be compatible with the datapack's floating point arithmetic. Due to the large number of command executions involved, the number of input features and network width cannot exceed 784. However, there is no limit to network depth. The number of ticks a forward pass takes increases with both the width and the depth of the network but not with the number of input features.
+The provided Python script ``convert.py`` maps the PyTorch layers on the right to the datapack layers on the left. Dropout layers ``torch.nn.Dropout``, used during the training process, are skipped, and an argmax function can be optionally applied by the script in the last layer, useful for classification models. The model parameters are rounded to a three decimal point precision to be compatible with the datapack's floating point arithmetic. Due to the large number of command executions involved, the number of input features and network width cannot exceed 784. However, there is no limit to network depth. The number of ticks a forward pass takes increases with both the width and the depth of the network but not with the number of input features. All converted models are automatically stored in ``./data/ajjnn/functions/models/`` as ``<model name>.mcfunction``, where the name can be specified. They can then be loaded with ``/function ajjnn:__load {model:<function name>}``.
 
-## Handwritten Digit Classification Demo
+## Available Demos
 
-To test the datapack, a simple model for handwritten digit classification was trained on the Modified National Institute of Standards and Technology (MNIST) database and converted to a file ``mnist_demo.mcfunction``, located in ``./data/ajjnn/functions/models/``. This model can be loaded with ``/function ajjnn:__load {model:"demo_mnist"}``. This fully-connected neural network receives an input vector of 784 features, which have been preprocessed to correspond to black and white pixels, labeled with 0 (drawn) and 1 (not drawn) respectively in a flattened 28x28-pixel image. The model consists of two hidden layers, each one having 32 units, and the ReLU activation function after each. The output is passed to a softmax function to yield the probability distribution of 10 classes, corresponding to digits 0-9. The last one is, however, replaced by an argmax function in the datapack, which simply gives the most likely digit.
+To test the datapack, some simple neural networks for handwritten character classification have been trained on the Extended Modified National Institute of Standards and Technology (EMNIST) database and converted to their respective mcfunction files, . These are ``demo_digits.mcfunction`` (10 classes, 96% accuracy), ``demo_letters.mcfunction`` (27 classes, 86% accuracy) and ``demo_balanced.mcfunction`` (47 classes, 80% accuracy). These models can be loaded by specifying their name (e.g., ``/function ajjnn:__load {model:"demo_digits"}``).
 
-A demo has been provided that allows the user to draw digits on a canvas through raycasting. The canvas can be placed or relocated with ``/function ajjnn:__demo/place_canvas`` and removed with ``/function ajjnn:__demo/remove_canvas``. A brush and eraser kit can be obtained with ``/function ajjnn:__demo/kit``. To be more intuitive, the demo uses white for pixels not drawn and black for drawn pixels. Furthermore, the drawable area of the canvas is restricted to 20x20 pixels, which gives better results as the original dataset had been padded. On top of the canvas, there is a gray arrow facing south, indicating the upward direction when drawing digits. The demo has been designed to perform inference as the user is drawing digits, giving real-time feedback on the user's actionbar.
+These neural networks receive an input vector of 784 features, which take the values 0 (background) or 1 (character) in a flattened 28x28-pixel image. Along with these demos, a canvas is provided that allows the user to draw digits through raycasting. The canvas can be placed or relocated with ``/function ajjnn:__demo/place_canvas`` and removed with ``/function ajjnn:__demo/remove_canvas``. A brush and eraser kit can be obtained with ``/function ajjnn:__demo/kit``. The demo uses white for pixels not drawn and black for drawn pixels. Furthermore, the drawable area of the canvas is restricted to 20x20 pixels to indicate the expected character size as the original datasets had been padded. On top of the canvas, there is a gray arrow facing south, showing the upward direction when drawing digits. As part of this demo setup, inference is performed as the user is drawing digits, giving real-time feedback on the user's actionbar.
 
-> [!NOTE]
-> This is a very simple neural network architecture, constrained by the computational limitations associated with datapacks. Classification may often not be correct.
-
-## Running Neural Networks
+## Running Models
 
 | Data Storage NBT Tag      | Description                | Type                   |
 |:--------------------------|:---------------------------|:-----------------------|
