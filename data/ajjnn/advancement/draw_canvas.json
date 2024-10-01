@@ -5,13 +5,13 @@
             "conditions": {
                 "item": {
                     "predicates": {
-                        "minecraft:custom_data": "{ajjnn:{eraser:1b}}"
+                        "minecraft:custom_data": "{ajjnn:{brush:1b}}"
                     }
                 }
             }
         }
     },
     "rewards": {
-        "function": "ajjnn:control/demo/erase_canvas"
+        "function": "ajjnn:control/demo/init_draw_canvas"
     }
 }
