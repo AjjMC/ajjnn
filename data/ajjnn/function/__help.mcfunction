@@ -6,6 +6,7 @@ tellraw @s {"text":"/function ajjnn:__install","color":"green","clickEvent":{"ac
 tellraw @s {"text":"/function ajjnn:__load","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__load"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}
 tellraw @s {"text":"/function ajjnn:__manual","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__manual"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}
 tellraw @s {"text":"/function ajjnn:__uninstall","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__uninstall"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}
+tellraw @s {"text":"/function ajjnn:__version","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__version"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}
 tellraw @s {"text":"/function ajjnn:__view","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__view"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}
 tellraw @s {"text":"/function ajjnn:_forward","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:_forward"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}
 tellraw @s {"text":"/function ajjnn:_load","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:_load"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}

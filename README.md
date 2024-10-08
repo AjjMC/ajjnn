@@ -1,6 +1,6 @@
 # A Neural Network Deployment Library for Minecraft Mapmaking
 
-> **AVAILABLE ON 1.21**
+> **AVAILABLE ON 1.21.2**
 >
 > **Please report any bugs in the issues section.**
 
@@ -33,6 +33,7 @@ The datapack can be downloaded from this repository by clicking on "Code" and th
 | ``/function ajjnn:__install``            | Installs datapack                                    |
 | ``/function ajjnn:__manual``             | Displays datapack manual link                        |
 | ``/function ajjnn:__uninstall``          | Uninstalls datapack                                  |
+| ``/function ajjgui:__version``           | Displays datapack version                            |
 | ``/function ajjnn:__view``               | Displays model architecture                          |
 | ``/function ajjnn:_forward``             | Runs ``/function ajjnn:__forward`` without feedback  |
 | ``/function ajjnn:_load``                | Runs ``/function ajjnn:__load`` without feedback     |
@@ -59,17 +60,17 @@ The neural networks receive an input vector of 784 features, which take the valu
 
 ## Running Models
 
-| Data Storage NBT Tag      | Description                | Type                   |
-|:--------------------------|:---------------------------|:-----------------------|
-| ``ajjnn:data input``      | Model input                | Double List            |
-| ``ajjnn:data name``       | Model name                 | String                 |
-| ``ajjnn:data output``     | Model output               | Integer or Double List |
-| ``ajjnn:data parameters`` | Number of model parameters | Integer                |
-| ``ajjnn:data sequence``   | Model layers               | Compound List          |
-| ``ajjnn:data status``     | Model status               | Byte                   |
+| Data Storage NBT Tag      | Description                | Type          |
+|:--------------------------|:---------------------------|:--------------|
+| ``ajjnn:data input``      | Model input                | Double List   |
+| ``ajjnn:data name``       | Model name                 | String        |
+| ``ajjnn:data output``     | Model output               | Any           |
+| ``ajjnn:data parameters`` | Number of model parameters | Int           |
+| ``ajjnn:data sequence``   | Model layers               | Compound List |
+| ``ajjnn:data status``     | Model status               | Byte          |
 
 The currently loaded model's architecture and parameters are stored in the ``ajjnn:data sequence`` NBT tag. Mapmakers can set the input ``ajjnn:data input``, perform a forward pass with ``/function ajjnn:__forward`` and retrieve the output ``ajjnn:data output``. The status of the model is determined by the ``ajjnn:data status`` NBT tag. If this value is set to ``0b``, the model is idle and can be used. If it is set to ``1b``, the model is running and cannot be used. Once the output has been calculated, this value is set to ``2b`` for a single tick and then back to ``0b``.
 
 ## Copyright
 
-Copyright © 2023 - 2024 Ajj (https://github.com/AjjMC/ajjnn)
+Copyright © 2023 - 2025 Ajj (https://github.com/AjjMC/ajjnn)

@@ -1,5 +1,4 @@
-execute if block ~ ~ ~ #minecraft:wool run data modify storage ajjnn:data input append value 0.0
-execute if block ~ ~ ~ minecraft:white_concrete run data modify storage ajjnn:data input append value 0.0
+execute unless block ~ ~ ~ minecraft:black_concrete run data modify storage ajjnn:data input append value 0.0
 execute if block ~ ~ ~ minecraft:black_concrete run data modify storage ajjnn:data input append value 1.0
 
 scoreboard players operation #position ajjnn = #count ajjnn
