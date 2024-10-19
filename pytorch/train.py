@@ -15,7 +15,7 @@ def main(
     batch_size: int,
     num_epochs: int,
     data_dir: str,
-    params_dir: str,
+    checkpoint_dir: str,
     split: str,
 ) -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -51,25 +51,28 @@ def main(
     classes = train_dataset.classes
     num_classes = len(classes)
 
-    os.makedirs(params_dir, exist_ok=True)
+    os.makedirs(checkpoint_dir, exist_ok=True)
 
-    params_list = os.listdir(params_dir)
-    params_list = sorted(params_list, key=lambda x: int(x.split("_")[-1].split(".")[0]))
+    checkpoint_list = os.listdir(checkpoint_dir)
+    checkpoint_list = sorted(
+        checkpoint_list, key=lambda x: int(x.split("_")[-1].split(".")[0])
+    )
 
-    if len(params_list) == 0:
+    if len(checkpoint_list) == 0:
         model = create_model(num_classes, split)
         model = model.to(device)
 
-        checkpoint = 0
+        optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+
+        checkpoint_num = 0
     else:
-        params = params_list[-1]
-        params_path = os.path.join(params_dir, params)
+        checkpoint_file = checkpoint_list[-1]
+        checkpoint_path = os.path.join(checkpoint_dir, checkpoint_file)
 
-        model = torch.load(params_path)
+        model, optimizer = torch.load(checkpoint_path)
 
-        checkpoint = int(params.split("_")[-1].split(".")[0]) + 1
+        checkpoint_num = int(checkpoint_file.split("_")[-1].split(".")[0]) + 1
 
-    optim = torch.optim.Adam(model.parameters(), lr=learning_rate)
     num_params = sum(p.numel() for p in model.parameters())
 
     train_data_loader = DataLoader(
@@ -84,7 +87,7 @@ def main(
 
     accuracies = []
 
-    for epoch in range(checkpoint, checkpoint + num_epochs):
+    for epoch in range(checkpoint_num, checkpoint_num + num_epochs):
         avg_loss = 0.0
         len_data_loader = len(train_data_loader)
 
@@ -99,7 +102,7 @@ def main(
 
             labels = labels.to(device)
 
-            optim.zero_grad()
+            optimizer.zero_grad()
 
             outputs = model(images)
 
@@ -107,7 +110,7 @@ def main(
 
             loss.backward()
 
-            optim.step()
+            optimizer.step()
 
             avg_loss += loss.item()
 
@@ -124,10 +127,12 @@ def main(
             flush=True,
         )
 
-        torch.save(model, os.path.join(params_dir, f"epoch_{epoch}.pt"))
+        torch.save(
+            (model, optimizer), os.path.join(checkpoint_dir, f"epoch_{epoch}.pt")
+        )
 
     best_epoch, best_accuracy = max(enumerate(accuracies), key=lambda x: x[1])
-    best_epoch += checkpoint
+    best_epoch += checkpoint_num
 
     print(f"Best Epoch: {best_epoch}, Test Accuracy: {best_accuracy:.2f}%", flush=True)
 
@@ -139,7 +144,7 @@ if __name__ == "__main__":
     args.add_argument("--batch_size", type=int, default=64)
     args.add_argument("--num_epochs", type=int, default=10)
     args.add_argument("--data_dir", type=str, default="./data")
-    args.add_argument("--params_dir", type=str, default="./params")
+    args.add_argument("--checkpoint_dir", type=str, default="./checkpoints")
     args.add_argument(
         "--split",
         type=str,
@@ -154,6 +159,6 @@ if __name__ == "__main__":
         batch_size=args.batch_size,
         num_epochs=args.num_epochs,
         data_dir=args.data_dir,
-        params_dir=args.params_dir,
+        checkpoint_dir=args.checkpoint_dir,
         split=args.split,
     )

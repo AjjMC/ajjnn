@@ -4,23 +4,32 @@ import os
 import torch
 
 
-def main(params_dir: str, params_file: str, model_name: str, add_argmax: bool) -> None:
-    if not os.path.exists(params_dir):
-        raise FileNotFoundError(f"Parameter directory {params_dir} not found")
+def main(
+    checkpoint_dir: str, checkpoint_num: str, model_name: str, add_argmax: bool
+) -> None:
+    if not os.path.exists(checkpoint_dir):
+        raise FileNotFoundError(f"Checkpoint directory {checkpoint_dir} not found")
 
-    params_list = os.listdir(params_dir)
-    params_list = sorted(params_list, key=lambda x: int(x.split("_")[-1].split(".")[0]))
+    checkpoint_list = os.listdir(checkpoint_dir)
+    checkpoint_list = sorted(
+        checkpoint_list, key=lambda x: int(x.split("_")[-1].split(".")[0])
+    )
 
-    if len(params_list) == 0:
-        raise ValueError(f"Parameter directory {params_dir} is empty")
+    if len(checkpoint_list) == 0:
+        raise ValueError(f"Checkpoint directory {checkpoint_dir} is empty")
 
-    params = params_list[-1] if params_file is None else params_file
-    params_path = os.path.join(params_dir, params)
+    if checkpoint_num not in range(-1, len(checkpoint_list)):
+        raise ValueError(
+            f"Checkpoint number {checkpoint_num} not in range [-1, {len(checkpoint_list)})"
+        )
 
-    if not os.path.exists(params_path):
-        raise ValueError(f"Parameter file {params_file} does not exist")
+    checkpoint_file = checkpoint_list[checkpoint_num]
+    checkpoint_path = os.path.join(checkpoint_dir, checkpoint_file)
 
-    model = torch.load(params_path)
+    if not os.path.exists(checkpoint_path):
+        raise ValueError(f"Checkpoint file {checkpoint_path} not found")
+
+    model, _ = torch.load(checkpoint_path)
 
     if not isinstance(model, torch.nn.Sequential):
         raise ValueError("Model must be an instance of torch.nn.Sequential")
@@ -122,16 +131,16 @@ def str2bool(v):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--params_dir", type=str, default="./params")
-    parser.add_argument("--params_file", type=str, default=None)
+    parser.add_argument("--checkpoint_dir", type=str, default="./checkpoints")
+    parser.add_argument("--checkpoint_num", type=int, default=-1)
     parser.add_argument("--model_name", type=str, default="model")
     parser.add_argument("--add_argmax", type=str2bool, default=False)
 
     args = parser.parse_args()
 
     main(
-        params_dir=args.params_dir,
-        params_file=args.params_file,
+        checkpoint_dir=args.checkpoint_dir,
+        checkpoint_num=args.checkpoint_num,
         model_name=args.model_name,
         add_argmax=args.add_argmax,
     )
