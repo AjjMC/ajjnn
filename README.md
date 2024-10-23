@@ -1,6 +1,6 @@
 # A Neural Network Deployment Library for Minecraft Mapmaking
 
-> **AVAILABLE ON 1.21.2**
+> **AVAILABLE ON 1.21.3**
 >
 > **Please report any bugs in the issues section.**
 
