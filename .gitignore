@@ -1,4 +1,4 @@
 /pytorch/__pycache__/
 /pytorch/data/
-/pytorch/params/
+/pytorch/checkpoints/
 /pytorch/sample.png
