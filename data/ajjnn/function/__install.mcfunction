@@ -13,6 +13,6 @@ data modify storage ajjnn:data version set from storage ajjnn:temp version
 tellraw @a [{"text":"Installed "},{"text":"ajjnn","color":"gray"}]
 tellraw @a [{"text":"Version: "},{"nbt":"version","storage":"ajjnn:data","color":"gray"},{"text":"\n"}]
 
-execute as @a run function ajjnn:__copyright
+execute as @a run function ajjnn:__crediting
 
 tellraw @a [{"text":"\nType "},{"text":"/function ajjnn:__help","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__help"},"hoverEvent":{"action":"show_text","contents":"Click Here"}},{"text":" for help"}]

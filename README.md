@@ -1,8 +1,10 @@
 # A Neural Network Deployment Library for Minecraft Mapmaking
 
-> **AVAILABLE ON 1.21.3**
+> **AVAILABLE ON 1.21.4**
 >
 > **[CLICK HERE TO DOWNLOAD](https://github.com/AjjMC/ajjnn/archive/refs/heads/main.zip)**
+>
+> **Also available on [Modrinth](https://modrinth.com/datapack/ajjnn) and [Planet Minecraft](https://www.planetminecraft.com/data-pack/ajjnn/). Please support the project by starring, following, etc. on the respective platforms!**
 >
 > **Please report any bugs in the issues section.**
 
@@ -17,7 +19,7 @@
 
 ## Overview
 
-This datapack allows mapmakers to deploy neural networks of arbitrary widths and depths in Minecraft. It functions as a black box that performs inference dynamically for a given model, without requiring any modifications. A Python script is provided, converting trained PyTorch models to standalone mcfunction files used to load them into the game.
+This datapack allows mapmakers to deploy neural networks of arbitrary widths and depths in Minecraft. It functions as a black box that performs inference dynamically for a given model, without requiring any modifications to be made. A Python script is provided, converting trained PyTorch models to standalone mcfunction files used to load them into the game.
 
 ## Installing
 
@@ -25,7 +27,7 @@ After this folder has been added to the "datapacks" folder of a Minecraft world,
 
 | Function                                 | Description                                          |
 |:-----------------------------------------|:-----------------------------------------------------|
-| ``/function ajjnn:__copyright``          | Displays datapack copyright information              |
+| ``/function ajjnn:__crediting``          | Displays datapack crediting information              |
 | ``/function ajjnn:__demo/kit``           | Gives demo kit                                       |
 | ``/function ajjnn:__demo/place_canvas``  | Places or relocates demo canvas                      |
 | ``/function ajjnn:__demo/remove_canvas`` | Removes demo canvas                                  |
@@ -73,6 +75,6 @@ The neural networks receive an input vector of 784 features, which take the valu
 
 The currently loaded model's architecture and parameters are stored in the ``ajjnn:data sequence`` NBT tag. Mapmakers can set the input ``ajjnn:data input``, perform a forward pass with ``/function ajjnn:__forward`` and retrieve the output ``ajjnn:data output``. The status of the model is determined by the ``ajjnn:data status`` NBT tag. If this value is set to ``0b``, the model is idle and can be used. If it is set to ``1b``, the model is running and cannot be used. Once the output has been calculated, this value is set to ``2b`` for a single tick and then back to ``0b``.
 
-## Copyright
+## Crediting
 
-Copyright © 2023 - 2025 Ajj (https://github.com/AjjMC/ajjnn)
+Made by Ajj and published under the MIT license. Please share the repository link.

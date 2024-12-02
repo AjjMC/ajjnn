@@ -1,4 +1,4 @@
-tellraw @s {"text":"/function ajjnn:__copyright","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__copyright"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}
+tellraw @s {"text":"/function ajjnn:__crediting","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__crediting"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}
 tellraw @s {"text":"/function ajjnn:__demo/","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__demo/"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}
 tellraw @s {"text":"/function ajjnn:__forward","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__forward"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}
 tellraw @s {"text":"/function ajjnn:__help","color":"green","clickEvent":{"action":"suggest_command","value":"/function ajjnn:__help"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}
