@@ -16,36 +16,69 @@ def main(
     num_epochs: int,
     data_dir: str,
     checkpoint_dir: str,
-    split: str,
+    dataset: str,
 ) -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    train_dataset = tv.datasets.EMNIST(
-        root=data_dir,
-        split=split,
-        train=True,
-        transform=tv.transforms.Compose(
-            [
-                lambda image: tv.transforms.functional.rotate(image, -90),
-                lambda image: tv.transforms.functional.hflip(image),
-                tv.transforms.ToTensor(),
-            ]
-        ),
-        download=True,
-    )
+    if "emnist" in dataset:
+        emnist_split = dataset.split("_")[1]
 
-    test_dataset = tv.datasets.EMNIST(
-        root=data_dir,
-        split=split,
-        train=False,
-        transform=tv.transforms.Compose(
-            [
-                lambda image: tv.transforms.functional.rotate(image, -90),
-                lambda image: tv.transforms.functional.hflip(image),
-                tv.transforms.ToTensor(),
-            ]
-        ),
-        download=True,
+        train_dataset = tv.datasets.EMNIST(
+            root=data_dir,
+            split=emnist_split,
+            train=True,
+            transform=tv.transforms.Compose(
+                [
+                    lambda image: tv.transforms.functional.rotate(image, -90),
+                    lambda image: tv.transforms.functional.hflip(image),
+                    tv.transforms.ToTensor(),
+                ]
+            ),
+            download=True,
+        )
+
+        test_dataset = tv.datasets.EMNIST(
+            root=data_dir,
+            split=emnist_split,
+            train=False,
+            transform=tv.transforms.Compose(
+                [
+                    lambda image: tv.transforms.functional.rotate(image, -90),
+                    lambda image: tv.transforms.functional.hflip(image),
+                    tv.transforms.ToTensor(),
+                ]
+            ),
+            download=True,
+        )
+
+    elif dataset == "cifar10":
+        train_dataset = tv.datasets.CIFAR10(
+            root=data_dir, train=True, transform=tv.transforms.ToTensor(), download=True
+        )
+
+        test_dataset = tv.datasets.CIFAR10(
+            root=data_dir,
+            train=False,
+            transform=tv.transforms.ToTensor(),
+            download=True,
+        )
+
+    elif dataset == "cifar100":
+        train_dataset = tv.datasets.CIFAR100(
+            root=data_dir, train=True, transform=tv.transforms.ToTensor(), download=True
+        )
+
+        test_dataset = tv.datasets.CIFAR100(
+            root=data_dir,
+            train=False,
+            transform=tv.transforms.ToTensor(),
+            download=True,
+        )
+
+    num_features = (
+        train_dataset[0][0].shape[0]
+        * train_dataset[0][0].shape[1]
+        * train_dataset[0][0].shape[2]
     )
 
     classes = train_dataset.classes
@@ -59,7 +92,7 @@ def main(
     )
 
     if len(checkpoint_list) == 0:
-        model = create_model(num_classes, split)
+        model = create_model(num_features, num_classes, dataset)
         model = model.to(device)
 
         optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -81,7 +114,7 @@ def main(
 
     test_data_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
 
-    print(f"{split}, {num_classes} Classes: {classes}", flush=True)
+    print(f"{dataset}, {num_classes} Classes: {classes}", flush=True)
     print("Number of Parameters:", num_params, flush=True)
     print("Training on", device, flush=True)
 
@@ -95,7 +128,7 @@ def main(
 
         for images, labels in train_data_loader:
             images = images.to(device)
-            images = images.view(-1, 28**2)
+            images = images.view(-1, num_features)
             images = torch.where(
                 images >= 0.5, torch.ones_like(images), torch.zeros_like(images)
             )
@@ -146,10 +179,16 @@ if __name__ == "__main__":
     args.add_argument("--data_dir", type=str, default="./data")
     args.add_argument("--checkpoint_dir", type=str, default="./checkpoints")
     args.add_argument(
-        "--split",
+        "--dataset",
         type=str,
-        choices=["balanced", "letters", "digits"],
-        default="digits",
+        choices=[
+            "emnist_balanced",
+            "emnist_letters",
+            "emnist_digits",
+            "cifar10",
+            "cifar100",
+        ],
+        default="emnist_digits",
     )
 
     args = args.parse_args()
@@ -160,5 +199,5 @@ if __name__ == "__main__":
         num_epochs=args.num_epochs,
         data_dir=args.data_dir,
         checkpoint_dir=args.checkpoint_dir,
-        split=args.split,
+        dataset=args.dataset,
     )
