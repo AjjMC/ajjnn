@@ -2,16 +2,16 @@ data modify storage ajjnn:math v2 set from storage ajjnn:math M[0]
 
 function ajjnn:math/dot_vectors
 
+data modify storage ajjnn:math x1 set from storage ajjnn:math y
+data modify storage ajjnn:math x2 set from storage ajjnn:math b[0]
+
+function ajjnn:math/add_doubles
+
 data modify storage ajjnn:math M append from storage ajjnn:math M[0]
 data modify storage ajjnn:math b append from storage ajjnn:math b[0]
-data modify storage ajjnn:math x1 set from storage ajjnn:math b[0]
 
 data remove storage ajjnn:math M[0]
 data remove storage ajjnn:math b[0]
-
-data modify storage ajjnn:math x2 set from storage ajjnn:math y
-
-function ajjnn:math/add_doubles
 
 data modify storage ajjnn:math u append from storage ajjnn:math y
 
