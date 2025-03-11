@@ -6,7 +6,7 @@
 >
 > **Also available on [Modrinth](https://modrinth.com/datapack/ajjnn) and [Planet Minecraft](https://www.planetminecraft.com/data-pack/ajjnn/). Please support the project by starring, following, etc. on the respective platforms!**
 >
-> **Please report any bugs in the issues section.**
+> **For any queries, please use the issues section.**
 
 <p align = "center">
   <img src="repo/demo_digits.gif" width="250">
@@ -23,7 +23,7 @@ This datapack allows mapmakers to deploy neural networks of arbitrary widths and
 
 ## Installing
 
-After this folder has been added to the "datapacks" folder of a Minecraft world, ``/reload`` needs to be run in-game. A list of the datapack's commands is available via ``/function ajjnn:__help``. By convention, all functions run directly by the mapmaker start with two underscores. Functions starting with a single underscore are aliases that do not give any feedback messages in the chat. These are meant to be used by the mapmaker as part of their own map's datapack. Any functions not listed here are internal and are not meant to be used.
+After this datapack has been added to the "datapacks" folder of a Minecraft world, ``/reload`` needs to be run in-game. A list of the datapack's commands is available via ``/function ajjnn:__help``. By convention, all functions run directly by the mapmaker start with two underscores. Functions starting with a single underscore are aliases that do not give any feedback messages in the chat. These are meant to be used by the mapmaker as part of their own map's datapack. Any functions not listed here are internal and are not meant to be used.
 
 | Function                                 | Description                                          |
 |:-----------------------------------------|:-----------------------------------------------------|
