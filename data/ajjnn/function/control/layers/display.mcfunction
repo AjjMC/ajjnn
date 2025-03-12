@@ -9,9 +9,9 @@ execute if data storage ajjnn:temp {layer:{layer:"argmax"}} run data modify stor
 execute if data storage ajjnn:temp layer.weights store result score #rows ajjnn run data get storage ajjnn:temp layer.weights
 execute if data storage ajjnn:temp layer.weights store result score #columns ajjnn run data get storage ajjnn:temp layer.weights[0]
 
-execute unless data storage ajjnn:temp {layer:"Unknown"} if data storage ajjnn:temp layer.weights run tellraw @s [{"score":{"name":"#layer_count","objective":"ajjnn"}},{"text":". "},{"storage":"ajjnn:temp","nbt":"layer_name","color":"red"},{"text":" Layer ("},{"score":{"name":"#rows","objective":"ajjnn"}},{"text":"x"},{"score":{"name":"#columns","objective":"ajjnn"}},{"text":")"}]
-execute unless data storage ajjnn:temp {layer:"Unknown"} unless data storage ajjnn:temp layer.weights run tellraw @s [{"score":{"name":"#layer_count","objective":"ajjnn"}},{"text":". "},{"storage":"ajjnn:temp","nbt":"layer_name","color":"blue"},{"text":" Layer"}]
-execute if data storage ajjnn:temp {layer:"Unknown"} run tellraw @s [{"score":{"name":"#layer_count","objective":"ajjnn"}},{"text":". "},{"storage":"ajjnn:temp","nbt":"layer_name","color":"dark_gray"},{"text":" Layer"}]
+execute unless data storage ajjnn:temp {layer:"Unknown"} if data storage ajjnn:temp layer.weights run tellraw @s [{score:{name:"#layer_count",objective:"ajjnn"}},{text:". "},{storage:"ajjnn:temp",nbt:"layer_name",color:"red"},{text:" Layer ("},{score:{name:"#rows",objective:"ajjnn"}},{text:"x"},{score:{name:"#columns",objective:"ajjnn"}},{text:")"}]
+execute unless data storage ajjnn:temp {layer:"Unknown"} unless data storage ajjnn:temp layer.weights run tellraw @s [{score:{name:"#layer_count",objective:"ajjnn"}},{text:". "},{storage:"ajjnn:temp",nbt:"layer_name",color:"blue"},{text:" Layer"}]
+execute if data storage ajjnn:temp {layer:"Unknown"} run tellraw @s [{score:{name:"#layer_count",objective:"ajjnn"}},{text:". "},{storage:"ajjnn:temp",nbt:"layer_name",color:"dark_gray"},{text:" Layer"}]
 
 data modify storage ajjnn:data sequence append from storage ajjnn:data sequence[0]
 data remove storage ajjnn:data sequence[0]

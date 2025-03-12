@@ -1,1 +1,1 @@
-tellraw @s {"text":"https://github.com/AjjMC/ajjnn","color":"green","clickEvent":{"action":"open_url","value":"https://github.com/AjjMC/ajjnn"},"hoverEvent":{"action":"show_text","contents":"Click Here"}}
+tellraw @s {text:"https://github.com/AjjMC/ajjnn",color:"green",click_event:{action:"open_url",url:"https://github.com/AjjMC/ajjnn"},hover_event:{action:"show_text",value:"Click Here"}}

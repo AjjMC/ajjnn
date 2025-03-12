@@ -45,4 +45,4 @@ data remove storage ajjnn:temp layer_name
 data remove storage ajjnn:temp layers
 data remove storage ajjnn:temp version
 
-tellraw @a [{"text":"Uninstalled "},{"text":"ajjnn","color":"gray"}]
+tellraw @a [{text:"Uninstalled "},{text:"ajjnn",color:"gray"}]

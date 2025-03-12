@@ -10,7 +10,7 @@ execute if data storage ajjnn:temp layer.weights store result score #input_rows 
 execute if data storage ajjnn:temp layer.weights store result score #rows ajjnn run data get storage ajjnn:temp layer.weights
 execute if data storage ajjnn:temp layer.weights store result score #columns ajjnn run data get storage ajjnn:temp layer.weights[0]
 
-execute if data storage ajjnn:temp layer.weights unless score #input_rows ajjnn = #columns ajjnn run tellraw @a [{"text":"Mismatch at layer ","color":"red"},{"score":{"name":"#layer_count","objective":"ajjnn"}},{"text":"; "},{"score":{"name":"#input_rows","objective":"ajjnn"}},{"text":" != "},{"score":{"name":"#columns","objective":"ajjnn"}}]
+execute if data storage ajjnn:temp layer.weights unless score #input_rows ajjnn = #columns ajjnn run tellraw @a [{text:"Mismatch at layer ",color:"red"},{score:{name:"#layer_count",objective:"ajjnn"}},{text:"; "},{score:{name:"#input_rows",objective:"ajjnn"}},{text:" != "},{score:{name:"#columns",objective:"ajjnn"}}]
 execute if data storage ajjnn:temp layer.weights unless score #input_rows ajjnn = #columns ajjnn run function ajjnn:control/layers/finish
 execute if data storage ajjnn:data {status:0b} run return fail
 
