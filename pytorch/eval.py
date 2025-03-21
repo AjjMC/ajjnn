@@ -136,7 +136,7 @@ def main(
     if not os.path.exists(checkpoint_path):
         raise ValueError(f"Checkpoint file {checkpoint_path} not found")
 
-    model, _ = torch.load(checkpoint_path)
+    model, _ = torch.load(checkpoint_path, weights_only=False)
     model = model.to(device)
 
     num_classes_model = model[-1].out_features

@@ -102,7 +102,7 @@ def main(
         checkpoint_file = checkpoint_list[-1]
         checkpoint_path = os.path.join(checkpoint_dir, checkpoint_file)
 
-        model, optimizer = torch.load(checkpoint_path)
+        model, optimizer = torch.load(checkpoint_path, weights_only=False)
 
         checkpoint_num = int(checkpoint_file.split("_")[-1].split(".")[0]) + 1
 

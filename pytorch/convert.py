@@ -29,7 +29,7 @@ def main(
     if not os.path.exists(checkpoint_path):
         raise ValueError(f"Checkpoint file {checkpoint_path} not found")
 
-    model, _ = torch.load(checkpoint_path)
+    model, _ = torch.load(checkpoint_path, weights_only=False)
 
     if not isinstance(model, torch.nn.Sequential):
         raise ValueError("Model must be an instance of torch.nn.Sequential")
