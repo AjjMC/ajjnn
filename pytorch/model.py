@@ -1,8 +1,8 @@
 import torch
 
 
-def create_model(num_features: int, num_classes: int, dataset: str) -> torch.nn.Module:
-    if dataset == "emnist_balanced":
+def create_model(num_features: int, num_classes: int, data: str) -> torch.nn.Module:
+    if data == "emnist_balanced":
         # 80% accuracy
         model = torch.nn.Sequential(
             torch.nn.Linear(num_features, 64),
@@ -12,7 +12,7 @@ def create_model(num_features: int, num_classes: int, dataset: str) -> torch.nn.
             torch.nn.Linear(32, num_classes),
         )
 
-    elif dataset == "emnist_letters":
+    elif data == "emnist_letters":
         # 86% accuracy
         model = torch.nn.Sequential(
             torch.nn.Linear(num_features, 48),
@@ -22,7 +22,7 @@ def create_model(num_features: int, num_classes: int, dataset: str) -> torch.nn.
             torch.nn.Linear(24, num_classes),
         )
 
-    elif dataset == "emnist_digits":
+    elif data == "emnist_digits":
         # 96% accuracy
         model = torch.nn.Sequential(
             torch.nn.Linear(num_features, 16),
@@ -32,7 +32,7 @@ def create_model(num_features: int, num_classes: int, dataset: str) -> torch.nn.
             torch.nn.Linear(8, num_classes),
         )
 
-    elif dataset == "cifar10":
+    elif data == "cifar10":
         model = torch.nn.Sequential(
             torch.nn.Linear(num_features, 64),
             torch.nn.ReLU(),
@@ -41,7 +41,7 @@ def create_model(num_features: int, num_classes: int, dataset: str) -> torch.nn.
             torch.nn.Linear(32, num_classes),
         )
 
-    elif dataset == "cifar100":
+    elif data == "cifar100":
         model = torch.nn.Sequential(
             torch.nn.Linear(num_features, 64),
             torch.nn.ReLU(),

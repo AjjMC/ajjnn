@@ -16,14 +16,14 @@ def main(
     num_epochs: int,
     data_dir: str,
     checkpoint_dir: str,
-    dataset: str,
+    data: str,
 ) -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    if "emnist" in dataset:
-        emnist_split = dataset.split("_")[1]
+    if "emnist" in data:
+        emnist_split = data.split("_")[1]
 
-        train_dataset = tv.datasets.EMNIST(
+        train_data = tv.datasets.EMNIST(
             root=data_dir,
             split=emnist_split,
             train=True,
@@ -37,7 +37,7 @@ def main(
             download=True,
         )
 
-        test_dataset = tv.datasets.EMNIST(
+        test_data = tv.datasets.EMNIST(
             root=data_dir,
             split=emnist_split,
             train=False,
@@ -51,24 +51,24 @@ def main(
             download=True,
         )
 
-    elif dataset == "cifar10":
-        train_dataset = tv.datasets.CIFAR10(
+    elif data == "cifar10":
+        train_data = tv.datasets.CIFAR10(
             root=data_dir, train=True, transform=tv.transforms.ToTensor(), download=True
         )
 
-        test_dataset = tv.datasets.CIFAR10(
+        test_data = tv.datasets.CIFAR10(
             root=data_dir,
             train=False,
             transform=tv.transforms.ToTensor(),
             download=True,
         )
 
-    elif dataset == "cifar100":
-        train_dataset = tv.datasets.CIFAR100(
+    elif data == "cifar100":
+        train_data = tv.datasets.CIFAR100(
             root=data_dir, train=True, transform=tv.transforms.ToTensor(), download=True
         )
 
-        test_dataset = tv.datasets.CIFAR100(
+        test_data = tv.datasets.CIFAR100(
             root=data_dir,
             train=False,
             transform=tv.transforms.ToTensor(),
@@ -76,12 +76,12 @@ def main(
         )
 
     num_features = (
-        train_dataset[0][0].shape[0]
-        * train_dataset[0][0].shape[1]
-        * train_dataset[0][0].shape[2]
+        train_data[0][0].shape[0]
+        * train_data[0][0].shape[1]
+        * train_data[0][0].shape[2]
     )
 
-    classes = train_dataset.classes
+    classes = train_data.classes
     num_classes = len(classes)
 
     os.makedirs(checkpoint_dir, exist_ok=True)
@@ -92,7 +92,7 @@ def main(
     )
 
     if len(checkpoint_list) == 0:
-        model = create_model(num_features, num_classes, dataset)
+        model = create_model(num_features, num_classes, data)
         model = model.to(device)
 
         optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -109,12 +109,12 @@ def main(
     num_params = sum(p.numel() for p in model.parameters())
 
     train_data_loader = DataLoader(
-        dataset=train_dataset, batch_size=batch_size, shuffle=True
+        dataset=train_data, batch_size=batch_size, shuffle=True
     )
 
-    test_data_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
+    test_data_loader = DataLoader(dataset=test_data, batch_size=batch_size)
 
-    print(f"{dataset}, {num_classes} Classes: {classes}", flush=True)
+    print(f"{data}, {num_classes} Classes: {classes}", flush=True)
     print("Number of Parameters:", num_params, flush=True)
     print("Training on", device, flush=True)
 
@@ -179,7 +179,7 @@ if __name__ == "__main__":
     args.add_argument("--data_dir", type=str, default="./data")
     args.add_argument("--checkpoint_dir", type=str, default="./checkpoints")
     args.add_argument(
-        "--dataset",
+        "--data",
         type=str,
         choices=[
             "emnist_balanced",
@@ -199,5 +199,5 @@ if __name__ == "__main__":
         num_epochs=args.num_epochs,
         data_dir=args.data_dir,
         checkpoint_dir=args.checkpoint_dir,
-        dataset=args.dataset,
+        data=args.data,
     )

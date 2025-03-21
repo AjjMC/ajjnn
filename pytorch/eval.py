@@ -31,8 +31,8 @@ def calc_accuracy(
 
         output_indexes = torch.argmax(outputs, dim=1)
 
-        total += labels.size(0)
         correct += (output_indexes == labels).sum().item()
+        total += labels.size(0)
 
     if training:
         model.train()
@@ -74,14 +74,14 @@ def main(
     data_dir: str,
     checkpoint_dir: str,
     checkpoint_num: str,
-    dataset: str,
+    data: str,
 ) -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    if "emnist" in dataset:
-        emnist_split = dataset.split("_")[1]
+    if "emnist" in data:
+        emnist_split = data.split("_")[1]
 
-        test_dataset = tv.datasets.EMNIST(
+        test_data = tv.datasets.EMNIST(
             root=data_dir,
             split=emnist_split,
             train=False,
@@ -95,23 +95,23 @@ def main(
             download=True,
         )
 
-    elif dataset == "cifar10":
-        test_dataset = tv.datasets.CIFAR10(
+    elif data == "cifar10":
+        test_data = tv.datasets.CIFAR10(
             root=data_dir,
             train=False,
             transform=tv.transforms.ToTensor(),
             download=True,
         )
 
-    elif dataset == "cifar100":
-        test_dataset = tv.datasets.CIFAR100(
+    elif data == "cifar100":
+        test_data = tv.datasets.CIFAR100(
             root=data_dir,
             train=False,
             transform=tv.transforms.ToTensor(),
             download=True,
         )
 
-    classes = test_dataset.classes
+    classes = test_data.classes
     num_classes = len(classes)
 
     if not os.path.exists(checkpoint_dir):
@@ -148,9 +148,9 @@ def main(
 
     num_params = sum(p.numel() for p in model.parameters())
 
-    data_loader = DataLoader(dataset=test_dataset, batch_size=batch_size)
+    data_loader = DataLoader(dataset=test_data, batch_size=batch_size)
 
-    print(f"{dataset}, {num_classes} Classes: {classes}", flush=True)
+    print(f"{data}, {num_classes} Classes: {classes}", flush=True)
     print("Number of Parameters:", num_params, flush=True)
 
     accuracy = calc_accuracy(model, data_loader)
@@ -161,7 +161,7 @@ def main(
         test_classifier(model, data_loader)
     )
 
-    tv.utils.save_image(image, f"./{dataset}_{target_class}.png")
+    tv.utils.save_image(image, f"./{data}_{target_class}.png")
 
     print(f"Output: {output}", flush=True)
     print(f"Output Class: {output_class} ({output_index})", flush=True)
@@ -176,7 +176,7 @@ if __name__ == "__main__":
     args.add_argument("--checkpoint_dir", type=str, default="./checkpoints")
     args.add_argument("--checkpoint_num", type=int, default=-1)
     args.add_argument(
-        "--dataset",
+        "--data",
         type=str,
         choices=[
             "emnist_balanced",
@@ -195,5 +195,5 @@ if __name__ == "__main__":
         data_dir=args.data_dir,
         checkpoint_dir=args.checkpoint_dir,
         checkpoint_num=args.checkpoint_num,
-        dataset=args.dataset,
+        data=args.data,
     )
