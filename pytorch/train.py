@@ -176,8 +176,8 @@ if __name__ == "__main__":
     args.add_argument("--learning_rate", type=float, default=1e-3)
     args.add_argument("--batch_size", type=int, default=64)
     args.add_argument("--num_epochs", type=int, default=10)
-    args.add_argument("--data_dir", type=str, default="./data")
-    args.add_argument("--checkpoint_dir", type=str, default="./checkpoints")
+    args.add_argument("--data_dir", type=str, default="data")
+    args.add_argument("--checkpoint_dir", type=str, default="checkpoints")
     args.add_argument(
         "--data",
         type=str,

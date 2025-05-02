@@ -131,7 +131,7 @@ def str2bool(v):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--checkpoint_dir", type=str, default="./checkpoints")
+    parser.add_argument("--checkpoint_dir", type=str, default="checkpoints")
     parser.add_argument("--checkpoint_num", type=int, default=-1)
     parser.add_argument("--model_name", type=str, default="model")
     parser.add_argument("--add_argmax", type=str2bool, default=False)

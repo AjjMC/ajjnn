@@ -161,7 +161,7 @@ def main(
         test_classifier(model, data_loader)
     )
 
-    tv.utils.save_image(image, f"./{data}_{target_class}.png")
+    tv.utils.save_image(image, f"{data}_{target_class}.png")
 
     print(f"Output: {output}", flush=True)
     print(f"Output Class: {output_class} ({output_index})", flush=True)
@@ -172,8 +172,8 @@ if __name__ == "__main__":
     args = argparse.ArgumentParser()
 
     args.add_argument("--batch_size", type=int, default=64)
-    args.add_argument("--data_dir", type=str, default="./data")
-    args.add_argument("--checkpoint_dir", type=str, default="./checkpoints")
+    args.add_argument("--data_dir", type=str, default="data")
+    args.add_argument("--checkpoint_dir", type=str, default="checkpoints")
     args.add_argument("--checkpoint_num", type=int, default=-1)
     args.add_argument(
         "--data",
