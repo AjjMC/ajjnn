@@ -25,28 +25,28 @@ This datapack allows mapmakers to deploy neural networks of arbitrary widths and
 
 After this datapack has been added to the "datapacks" folder of a Minecraft world, ``/reload`` needs to be run in-game. A list of the datapack's commands is available via ``/function ajjnn:__help``. By convention, all functions run directly by the mapmaker start with two underscores. Functions starting with a single underscore are aliases that do not give any feedback messages in the chat. These are meant to be used by the mapmaker as part of their own map's datapack. Any functions not listed here are internal and are not meant to be used.
 
-| Function                                 | Description                                          |
-|:-----------------------------------------|:-----------------------------------------------------|
-| ``/function ajjnn:__crediting``          | Displays datapack crediting information              |
-| ``/function ajjnn:__demo/kit``           | Gives demo kit                                       |
-| ``/function ajjnn:__demo/place_canvas``  | Places or relocates demo canvas                      |
-| ``/function ajjnn:__demo/remove_canvas`` | Removes demo canvas                                  |
-| ``/function ajjnn:__forward``            | Performs forward pass                                |
-| ``/function ajjnn:__help``               | Displays datapack command list                       |
-| ``/function ajjnn:__load``               | Loads PyTorch model into Minecraft                   |
-| ``/function ajjnn:__install``            | Installs datapack                                    |
-| ``/function ajjnn:__manual``             | Displays datapack manual link                        |
-| ``/function ajjnn:__uninstall``          | Uninstalls datapack                                  |
-| ``/function ajjgui:__version``           | Displays datapack version                            |
-| ``/function ajjnn:__view``               | Displays model architecture                          |
-| ``/function ajjnn:_forward``             | Runs ``/function ajjnn:__forward`` without feedback  |
-| ``/function ajjnn:_load``                | Runs ``/function ajjnn:__load`` without feedback     |
+| Function                                        | Description                                         |
+|:------------------------------------------------|:----------------------------------------------------|
+| ``/function ajjnn:__crediting``                 | Displays datapack crediting information             |
+| ``/function ajjnn:__demo/kit``                  | Gives demo kit                                      |
+| ``/function ajjnn:__demo/place_canvas``         | Places or relocates demo canvas                     |
+| ``/function ajjnn:__demo/remove_canvas``        | Removes demo canvas                                 |
+| ``/function ajjnn:__forward``                   | Performs forward pass                               |
+| ``/function ajjnn:__help``                      | Displays datapack command list                      |
+| ``/function ajjnn:__load {model:<model_name>}`` | Loads PyTorch model into Minecraft                  |
+| ``/function ajjnn:__install``                   | Installs datapack                                   |
+| ``/function ajjnn:__manual``                    | Displays datapack manual link                       |
+| ``/function ajjnn:__uninstall``                 | Uninstalls datapack                                 |
+| ``/function ajjgui:__version``                  | Displays datapack version                           |
+| ``/function ajjnn:__view``                      | Displays model architecture                         |
+| ``/function ajjnn:_forward``                    | Runs ``/function ajjnn:__forward`` without feedback |
+| ``/function ajjnn:_load {model:<model_name>}``  | Runs ``/function ajjnn:__load`` without feedback    |
 
 The datapack can be installed by running ``/function ajjnn:__install``. It can be uninstalled using ``/function ajjnn:__uninstall``, which removes all data associated with it from the world.
 
 ## Converting Models
 
-The datapack is limited to neural networks trained in PyTorch using ``torch.nn.Sequential``. At the moment, ``torch.nn.Linear`` is the only supported layer, along with the activation functions ``torch.nn.ReLU`` and ``torch.nn.HardSigmoid``. The provided Python script ``convert.py`` converts a PyTorch model to an mcfunction file, creating an NBT tag structure. Dropout layers ``torch.nn.Dropout``, used during the training process, are skipped, and an argmax function can be optionally applied by the script after the last layer, useful for classification models. The model parameters are rounded to a three decimal point precision to be compatible with the datapack's floating point arithmetic. Due to the large number of command executions involved, the number of input features and network width cannot exceed 784. However, there is no limit to network depth. The number of ticks a forward pass takes increases with both the width and the depth of the network but not with the number of input features. All converted models are automatically stored in ``./data/ajjnn/functions/models/`` as ``<model name>.mcfunction``, where the name can be specified. They can then be loaded with ``/function ajjnn:__load {model:<model name>}``.
+The datapack is limited to neural networks trained in PyTorch using ``torch.nn.Sequential``. At the moment, ``torch.nn.Linear`` is the only supported layer, along with the activation functions ``torch.nn.ReLU`` and ``torch.nn.HardSigmoid``. The provided Python script ``convert.py`` converts a PyTorch model to an mcfunction file, creating an NBT tag structure. Dropout layers ``torch.nn.Dropout``, used during the training process, are skipped, and an argmax function can be optionally applied by the script after the last layer, useful for classification models. The model parameters are rounded to a three decimal point precision to be compatible with the datapack's floating point arithmetic. Due to the large number of command executions involved, the number of input features and network width cannot exceed 784. However, there is no limit to network depth. The number of ticks a forward pass takes increases with both the width and the depth of the network but not with the number of input features. All converted models are automatically stored in ``./data/ajjnn/functions/models/`` as ``<model_name>.mcfunction``, where the name can be specified. They can then be loaded with ``/function ajjnn:__load {model:<model_name>}``.
 
 ## Available Demos
 

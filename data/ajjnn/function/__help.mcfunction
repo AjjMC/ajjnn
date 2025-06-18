@@ -3,10 +3,10 @@ tellraw @s {text:"/function ajjnn:__demo/",color:"green",click_event:{action:"su
 tellraw @s {text:"/function ajjnn:__forward",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__forward"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:__help",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__help"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:__install",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__install"},hover_event:{action:"show_text",value:"Click Here"}}
-tellraw @s {text:"/function ajjnn:__load",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__load"},hover_event:{action:"show_text",value:"Click Here"}}
+tellraw @s {text:"/function ajjnn:__load {model:<model_name>}",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__load"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:__manual",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__manual"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:__uninstall",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__uninstall"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:__version",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__version"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:__view",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__view"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:_forward",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:_forward"},hover_event:{action:"show_text",value:"Click Here"}}
-tellraw @s {text:"/function ajjnn:_load",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:_load"},hover_event:{action:"show_text",value:"Click Here"}}
+tellraw @s {text:"/function ajjnn:_load {model:<model_name>}",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:_load"},hover_event:{action:"show_text",value:"Click Here"}}
