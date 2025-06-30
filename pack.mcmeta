@@ -1,6 +1,6 @@
 {
   "pack": {
-    "pack_format": 80,
+    "pack_format": 81,
     "description": "A neural network deployment library for mapmaking"
   }
 }
