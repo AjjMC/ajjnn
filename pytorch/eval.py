@@ -43,7 +43,7 @@ def calc_accuracy(
 
 
 @torch.inference_mode()
-def test_classifier(model, data_loader):
+def test_classifier(model: torch.nn.Module, data_loader: torch.utils.data.DataLoader):
     device = next(model.parameters()).device
 
     classes = data_loader.dataset.classes
