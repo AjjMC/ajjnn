@@ -4,7 +4,7 @@
 >
 > **[CLICK HERE TO DOWNLOAD](https://github.com/AjjMC/ajjnn/archive/refs/heads/main.zip)**
 >
-> **Also available on [Modrinth](https://modrinth.com/datapack/ajjnn) and [Planet Minecraft](https://www.planetminecraft.com/data-pack/ajjnn/). Please support the project by starring, following, etc. on the respective platforms!**
+> **ALSO AVAILABLE ON [MODRINTH](https://modrinth.com/datapack/ajjnn)**
 >
 > **For any queries, please use the issues section.**
 
