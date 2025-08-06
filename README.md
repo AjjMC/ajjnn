@@ -2,9 +2,9 @@
 
 > **AVAILABLE ON 1.21.8**
 >
-> **[CLICK HERE TO DOWNLOAD](https://github.com/AjjMC/ajjnn/archive/refs/heads/main.zip)**
+> **CLICK [HERE](https://github.com/AjjMC/ajjnn/archive/refs/heads/main.zip) TO DOWNLOAD**
 >
-> **ALSO AVAILABLE ON [MODRINTH](https://modrinth.com/datapack/ajjnn)**
+> **Also available on [Modrinth](https://modrinth.com/datapack/ajjnn)**
 >
 > **For any queries, please use the issues section.**
 
