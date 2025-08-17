@@ -37,43 +37,43 @@ def main(
     parent = os.path.dirname(os.path.abspath(__file__))
     root = os.path.dirname(parent)
     converted_model_path = os.path.join(
-        root, "data", "ajjnn", "function", "models", f"{model_name}.mcfunction"
+        root, "data", "ajjnn", "function", "model", f"{model_name}.mcfunction"
     )
 
     with open(converted_model_path, "w") as f:
         set_model_name = (
-            f'data modify storage ajjnn:data name set value "{model_name}"\n\n'
+            f'data modify storage ajjnn:data model_name set value "{model_name}"\n\n'
         )
 
-        set_num_params = f"data modify storage ajjnn:data parameters set value {sum(p.numel() for p in model.parameters())}\n\n"
+        set_num_params = f"data modify storage ajjnn:data num_params set value {sum(p.numel() for p in model.parameters())}\n\n"
 
-        add_linear_layer = (
-            'data modify storage ajjnn:data sequence append value {layer:"linear"}\n\n'
+        add_linear_module = (
+            'data modify storage ajjnn:data modules append value {type:"linear"}\n\n'
         )
 
-        add_relu_layer = (
-            'data modify storage ajjnn:data sequence append value {layer:"relu"}\n\n'
+        add_relu_module = (
+            'data modify storage ajjnn:data modules append value {type:"relu"}\n\n'
         )
 
-        add_hard_sigmoid_layer = 'data modify storage ajjnn:data sequence append value {layer:"hard_sigmoid"}\n\n'
+        add_hard_sigmoid_module = 'data modify storage ajjnn:data modules append value {type:"hard_sigmoid"}\n\n'
 
-        add_argmax_layer = (
-            'data modify storage ajjnn:data sequence append value {layer:"argmax"}\n\n'
+        add_argmax_module = (
+            'data modify storage ajjnn:data modules append value {type:"argmax"}\n\n'
         )
 
         f.write(set_model_name)
         f.write(set_num_params)
 
-        for layer in model:
-            if isinstance(layer, torch.nn.Linear):
-                if layer.in_features > 784:
+        for module in model:
+            if isinstance(module, torch.nn.Linear):
+                if module.in_features > 784:
                     raise ValueError("Number of input features cannot exceed 784")
 
-                if layer.out_features > 784:
+                if module.out_features > 784:
                     raise ValueError("Network width cannot exceed 784")
 
-                weights = layer.weight.data
-                biases = layer.bias.data
+                weights = module.weight.data
+                biases = module.bias.data
 
                 weights_formatted_inside = ",".join(
                     f"[{','.join(f'{value:.3f}' for value in row)}]" for row in weights
@@ -85,28 +85,28 @@ def main(
 
                 biases_formatted = f"[{biases_formatted_inside}]"
 
-                set_linear_layer_weights = f"data modify storage ajjnn:data sequence[-1].weights set value {weights_formatted}\n\n"
+                set_linear_module_weights = f"data modify storage ajjnn:data modules[-1].weights set value {weights_formatted}\n\n"
 
-                set_linear_layer_biases = f"data modify storage ajjnn:data sequence[-1].biases set value {biases_formatted}\n\n"
+                set_linear_module_biases = f"data modify storage ajjnn:data modules[-1].biases set value {biases_formatted}\n\n"
 
-                f.write(add_linear_layer)
-                f.write(set_linear_layer_weights)
-                f.write(set_linear_layer_biases)
+                f.write(add_linear_module)
+                f.write(set_linear_module_weights)
+                f.write(set_linear_module_biases)
 
-            elif isinstance(layer, torch.nn.ReLU):
-                f.write(add_relu_layer)
+            elif isinstance(module, torch.nn.ReLU):
+                f.write(add_relu_module)
 
-            elif isinstance(layer, torch.nn.Hardsigmoid):
-                f.write(add_hard_sigmoid_layer)
+            elif isinstance(module, torch.nn.Hardsigmoid):
+                f.write(add_hard_sigmoid_module)
 
-            elif isinstance(layer, torch.nn.Dropout):
+            elif isinstance(module, torch.nn.Dropout):
                 continue
 
             else:
-                raise ValueError(f"Layer {layer} is not supported")
+                raise ValueError(f"Module {module} is not supported")
 
         if add_argmax:
-            f.write(add_argmax_layer)
+            f.write(add_argmax_module)
 
     print(f"Model {model_name} has been converted for use in Minecraft")
     print(

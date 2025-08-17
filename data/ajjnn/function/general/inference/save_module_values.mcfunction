@@ -1,0 +1,4 @@
+execute if data storage ajjnn:data {temp:{module:{type:"argmax"}}} run data modify storage ajjnn:data values append from storage ajjnn:data temp.math.y
+execute if data storage ajjnn:data {temp:{module:{type:"hard_sigmoid"}}} run data modify storage ajjnn:data values append from storage ajjnn:data temp.math.u
+execute if data storage ajjnn:data {temp:{module:{type:"linear"}}} run data modify storage ajjnn:data values append from storage ajjnn:data temp.math.u
+execute if data storage ajjnn:data {temp:{module:{type:"relu"}}} run data modify storage ajjnn:data values append from storage ajjnn:data temp.math.u

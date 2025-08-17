@@ -2,13 +2,13 @@ execute unless data storage ajjnn:data version run tellraw @s [{text:"Unable to 
 execute unless data storage ajjnn:data version run tellraw @s {text:"(Use a single underscore to hide feedback)",color:"yellow"}
 execute unless data storage ajjnn:data version run return fail
 
-data remove storage ajjnn:temp argument
-$data modify storage ajjnn:temp argument.model set value $(model)
-function ajjnn:_load with storage ajjnn:temp argument
+data remove storage ajjnn:data temp.args
+$data modify storage ajjnn:data temp.args.model set value $(model)
+function ajjnn:_load with storage ajjnn:data temp.args
 
-execute if data storage ajjnn:data {sequence:[]} run tellraw @s {text:"Unable to load model; model was not found",color:"red"}
-execute if data storage ajjnn:data {sequence:[]} run tellraw @s {text:"(Use a single underscore to hide feedback)",color:"yellow"}
-execute if data storage ajjnn:data {sequence:[]} run return fail
+execute if data storage ajjnn:data {modules:[]} run tellraw @s {text:"Unable to load model; model was not found",color:"red"}
+execute if data storage ajjnn:data {modules:[]} run tellraw @s {text:"(Use a single underscore to hide feedback)",color:"yellow"}
+execute if data storage ajjnn:data {modules:[]} run return fail
 
 tellraw @a {text:"Loaded PyTorch model"}
 

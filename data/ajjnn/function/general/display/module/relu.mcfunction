@@ -1,0 +1,2 @@
+data modify storage ajjnn:data temp.module_name set value "ReLU"
+tellraw @s [{score:{name:"#modules_count",objective:"ajjnn"}},{text:". "},{storage:"ajjnn:data",nbt:"temp.module_name",color:"blue"},{text:" Module"}]

@@ -56,16 +56,17 @@ The neural networks receive an input vector of 784 features, which take the valu
 
 ## Running Models
 
-| Data Storage NBT Tag      | Description                | Type          |
-|:--------------------------|:---------------------------|:--------------|
-| ``ajjnn:data input``      | Model input                | Double List   |
-| ``ajjnn:data name``       | Model name                 | String        |
-| ``ajjnn:data output``     | Model output               | Any           |
-| ``ajjnn:data parameters`` | Number of model parameters | Int           |
-| ``ajjnn:data sequence``   | Model layers               | Compound List |
-| ``ajjnn:data status``     | Model status               | Byte          |
+| Data Storage NBT Tag      | Description                                                                         | Type          |
+|:--------------------------|:------------------------------------------------------------------------------------|:--------------|
+| ``ajjnn:data in``         | Model input                                                                         | Double List   |
+| ``ajjnn:data model_name`` | Model name                                                                          | String        |
+| ``ajjnn:data modules``    | Model modules                                                                       | Compound List |
+| ``ajjnn:data num_params`` | Number of model parameters                                                          | Int           |
+| ``ajjnn:data out``        | Model output                                                                        | Any           |
+| ``ajjnn:data status``     | Model status                                                                        | Byte          |
+| ``ajjnn:data values``     | List of model module outputs, where ``ajjnn:data values[-1]`` is ``ajjnn:data out`` | List          |
 
-The currently loaded model's architecture and parameters are stored in the ``ajjnn:data sequence`` NBT tag. Mapmakers can set the input ``ajjnn:data input``, perform a forward pass with ``/function ajjnn:__forward`` and retrieve the output ``ajjnn:data output``. The status of the model is determined by the ``ajjnn:data status`` NBT tag. If this value is set to ``0b``, the model is idle and can be used. If it is set to ``1b``, the model is running and cannot be used. Once the output has been calculated, this value is set to ``2b`` for a single tick and then back to ``0b``.
+The currently loaded model's architecture and parameters are stored in the ``ajjnn:data modules`` NBT tag. Mapmakers can set the input ``ajjnn:data in``, perform a forward pass with ``/function ajjnn:__forward`` and retrieve the output ``ajjnn:data out``. The status of the model is determined by the ``ajjnn:data status`` NBT tag. If this value is set to ``0b``, the model is idle and can be used. If it is set to ``1b``, the model is running and cannot be used. Once the output has been calculated, this value is set to ``2b`` for a single tick and then back to ``0b``.
 
 ## Crediting
 

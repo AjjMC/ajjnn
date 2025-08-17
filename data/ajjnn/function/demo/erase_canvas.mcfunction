@@ -1,0 +1,5 @@
+fill ~-1.5 ~ ~-1.5 ~1.5 ~ ~1.5 minecraft:white_concrete replace minecraft:black_concrete
+
+execute if entity @s[distance=..64] positioned ^ ^ ^0.5 run function ajjnn:demo/erase_canvas
+
+execute if data storage ajjnn:data {status:0b} run schedule function ajjnn:demo/forward 1s

@@ -1,0 +1,17 @@
+{
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:using_item",
+            "conditions": {
+                "item": {
+                    "predicates": {
+                        "minecraft:custom_data": "{ajjnn:{brush:1b}}"
+                    }
+                }
+            }
+        }
+    },
+    "rewards": {
+        "function": "ajjnn:demo/init_draw_canvas"
+    }
+}

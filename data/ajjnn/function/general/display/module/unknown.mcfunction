@@ -1,0 +1,1 @@
+tellraw @s [{score:{name:"#modules_count",objective:"ajjnn"}},{text:". "},{storage:"ajjnn:data",nbt:"temp.module_name",color:"dark_gray"},{text:" Module"}]
