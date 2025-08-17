@@ -17,6 +17,8 @@ scoreboard players reset #position ajjnn
 scoreboard players reset #row_count ajjnn
 scoreboard players reset #rows_length ajjnn
 scoreboard players reset #sum ajjnn
+scoreboard players reset #x1 ajjnn
+scoreboard players reset #x2 ajjnn
 
 scoreboard objectives remove ajjnn
 
