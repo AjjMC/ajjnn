@@ -23,7 +23,6 @@ scoreboard players reset #x2 ajjnn
 scoreboard objectives remove ajjnn
 
 data remove storage ajjnn:data in
-data remove storage ajjnn:data math
 data remove storage ajjnn:data model_name
 data remove storage ajjnn:data modules
 data remove storage ajjnn:data num_params
