@@ -1,17 +1,17 @@
 {
-    "criteria": {
-        "requirement": {
-            "trigger": "minecraft:using_item",
-            "conditions": {
-                "item": {
-                    "predicates": {
-                        "minecraft:custom_data": "{ajjnn:{eraser:1b}}"
-                    }
-                }
-            }
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:using_item",
+      "conditions": {
+        "item": {
+          "predicates": {
+            "minecraft:custom_data": "{ajjnn:{eraser:1b}}"
+          }
         }
-    },
-    "rewards": {
-        "function": "ajjnn:demo/init_erase_canvas"
+      }
     }
+  },
+  "rewards": {
+    "function": "ajjnn:demo/init_erase_canvas"
+  }
 }
