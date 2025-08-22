@@ -1,6 +1,6 @@
 execute unless data storage ajjnn:data version run return fail
 
-function ajjnn:general/clear_schedules
+function ajjnn:installation/clear_schedules
 
 data modify storage ajjnn:data in set value []
 data modify storage ajjnn:data modules set value []

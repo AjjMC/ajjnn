@@ -10,4 +10,4 @@ execute store result score #modules_length ajjnn run data get storage ajjnn:data
 tellraw @s [{text:"Name: "},{storage:"ajjnn:data",nbt:"model_name",color:"gray"}]
 tellraw @s [{text:"Parameters: "},{storage:"ajjnn:data",nbt:"num_params",color:"gray"}]
 
-execute if score #modules_count ajjnn < #modules_length ajjnn run function ajjnn:general/display/loop
+execute if score #modules_count ajjnn < #modules_length ajjnn run function ajjnn:view/loop

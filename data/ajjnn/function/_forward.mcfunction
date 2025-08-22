@@ -7,9 +7,8 @@ scoreboard players set #modules_count ajjnn 0
 execute store result score #modules_length ajjnn run data get storage ajjnn:data modules
 
 data modify storage ajjnn:data status set value 1b
-data modify storage ajjnn:data values set value []
 data modify storage ajjnn:data temp.math.u set from storage ajjnn:data in
-data remove storage ajjnn:data temp.module
 data modify storage ajjnn:data temp.modules set from storage ajjnn:data modules
+data modify storage ajjnn:data temp.values set value []
 
-function ajjnn:general/inference/loop
+function ajjnn:inference/loop

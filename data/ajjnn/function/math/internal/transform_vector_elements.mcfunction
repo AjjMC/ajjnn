@@ -20,5 +20,5 @@ scoreboard players add #row_count ajjnn 1
 scoreboard players operation #count ajjnn = #row_count ajjnn
 scoreboard players operation #count ajjnn %= #dot_product_limit ajjnn
 
-execute if score #row_count ajjnn < #column_count ajjnn if score #count ajjnn matches 0 run schedule function ajjnn:general/math/transform_vector_elements 1t
-execute if score #row_count ajjnn < #column_count ajjnn unless score #count ajjnn matches 0 run function ajjnn:general/math/transform_vector_elements
+execute if score #row_count ajjnn < #column_count ajjnn if score #count ajjnn matches 0 run schedule function ajjnn:math/internal/transform_vector_elements 1t
+execute if score #row_count ajjnn < #column_count ajjnn unless score #count ajjnn matches 0 run function ajjnn:math/internal/transform_vector_elements

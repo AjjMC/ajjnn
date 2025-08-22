@@ -9,4 +9,4 @@ data remove storage ajjnn:data temp.math.v1[0]
 
 scoreboard players add #count ajjnn 1
 
-execute if score #count ajjnn < #length ajjnn run function ajjnn:general/math/argmax_vector_elements
+execute if score #count ajjnn < #length ajjnn run function ajjnn:math/internal/argmax_vector_elements
