@@ -49,7 +49,7 @@ The datapack can be installed by running ``/function ajjnn:__install``. It can b
 > [!NOTE]
 > Layers, activation functions, and other operations are referred to as *modules*.
 
-The datapack is limited to neural networks trained in PyTorch using ``torch.nn.Sequential``. At the moment, the ``torch.nn.Linear`` layer is implemented, along with the activation functions ``torch.nn.ReLU`` and ``torch.nn.HardSigmoid``. The provided Python script ``convert.py`` converts a PyTorch model to an mcfunction file, setting up an NBT tag structure for inference. Dropout layers ``torch.nn.Dropout``, used during the training process, are skipped, and an argmax function can be optionally applied by the script after the last module, useful for classification models. The model parameters are rounded to a three decimal point precision to be compatible with the datapack's floating point arithmetic. Due to the large number of command executions involved, the number of input features and network width cannot exceed 784. However, there is no limit to network depth. The number of ticks a forward pass takes increases with both the width and the depth of the network but not with the number of input features. All converted models are automatically stored in ``./data/ajjnn/function/model/`` as ``<model_name>.mcfunction``, where the name can be specified. They can then be loaded using ``/function ajjnn:__load {model:<model_name>}``, making them ready for inference.
+The datapack is limited to neural networks trained in PyTorch using ``torch.nn.Sequential``. At the moment, the ``torch.nn.Linear`` layer is implemented, along with the activation functions ``torch.nn.ReLU`` and ``torch.nn.HardSigmoid``. The provided Python script ``convert.py`` converts a PyTorch model to an mcfunction file, setting up an SNBT structure for inference. Dropout layers ``torch.nn.Dropout``, used during the training process, are skipped, and an argmax function can be optionally applied by the script after the last module, useful for classification models. The model parameters are rounded to a three decimal point precision to be compatible with the datapack's floating point arithmetic. Due to the large number of command executions involved, the number of input features and network width cannot exceed 784. However, there is no limit to network depth. The number of ticks a forward pass takes increases with both the width and the depth of the network but not with the number of input features. All converted models are automatically stored in ``./data/ajjnn/function/model/`` as ``<model_name>.mcfunction``, where the name can be specified. They can then be loaded using ``/function ajjnn:__load {model:<model_name>}``, making them ready for inference.
 
 ## Available Demos
 
@@ -59,7 +59,7 @@ The neural networks receive an input vector of 784 features, which take the valu
 
 ## Running Models
 
-| Data Storage NBT Tag      | Description                                                                         | Type          |
+| Data Storage SNBT         | Description                                                                         | Type          |
 |:--------------------------|:------------------------------------------------------------------------------------|:--------------|
 | ``ajjnn:data in``         | Model input                                                                         | Double List   |
 | ``ajjnn:data model_name`` | Model name                                                                          | String        |
@@ -69,7 +69,7 @@ The neural networks receive an input vector of 784 features, which take the valu
 | ``ajjnn:data status``     | Model status                                                                        | Byte          |
 | ``ajjnn:data values``     | List of model module outputs, where ``ajjnn:data values[-1]`` is ``ajjnn:data out`` | List          |
 
-The currently loaded model's architecture and parameters are stored in the ``ajjnn:data modules`` NBT tag. Mapmakers can set the input ``ajjnn:data in``, perform a forward pass with ``/function ajjnn:__forward``, and retrieve the output ``ajjnn:data out``. The status of the model is determined by the ``ajjnn:data status`` NBT tag. If this value is set to ``0b``, the model is idle and can be used. If it is set to ``1b``, the model is running and cannot be used. Once the output has been calculated, this value is set to ``2b`` for a single tick and then back to ``0b``.
+The currently loaded model's architecture and parameters are stored in the ``ajjnn:data modules`` SNBT. Mapmakers can set the input ``ajjnn:data in``, perform a forward pass with ``/function ajjnn:__forward``, and retrieve the output ``ajjnn:data out``. The status of the model is determined by the ``ajjnn:data status`` SNBT. If this value is set to ``0b``, the model is idle and can be used. If it is set to ``1b``, the model is running and cannot be used. Once the output has been calculated, this value is set to ``2b`` for a single tick and then back to ``0b``.
 
 ## Crediting
 
