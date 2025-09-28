@@ -1,4 +1,4 @@
-execute unless data storage ajjnn:data version run tellraw @a [{text:"ajjnn",color:"gray"},{text:" is not installed",color:"red"}]
+execute unless data storage ajjnn:data version run tellraw @a [{text:""},{text:"ajjnn",color:"gray"},{text:" is not installed"}]
 execute unless data storage ajjnn:data version run tellraw @a [{text:"Type "},{text:"/function ajjnn:__install",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__install"},hover_event:{action:"show_text",value:"Click Here"}},{text:" to install"}]
 
 function ajjnn:installation/set_version
