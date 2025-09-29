@@ -1,6 +1,6 @@
 # A Neural Network Deployment Library for Minecraft Mapmaking
 
-> **AVAILABLE ON 1.21.8**
+> **AVAILABLE ON 1.21.9**
 >
 > **Click [here](https://github.com/AjjMC/ajjnn/archive/refs/heads/main.zip) to download.**
 >
