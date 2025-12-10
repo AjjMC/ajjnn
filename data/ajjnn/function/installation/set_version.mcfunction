@@ -1,1 +1,1 @@
-data modify storage ajjnn:data temp.version set value "m1.21.9v1"
+data modify storage ajjnn:data temp.version set value "25.0"
