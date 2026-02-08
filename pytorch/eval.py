@@ -1,5 +1,5 @@
 import argparse
-import os
+from pathlib import Path
 
 import torch
 from torch.utils.data import DataLoader
@@ -72,7 +72,7 @@ def test_classifier(model: torch.nn.Module, data_loader: torch.utils.data.DataLo
 def main(
     batch_size: int,
     data_dir: str,
-    checkpoint_dir: str,
+    checkpoint_dir: Path,
     checkpoint_num: str,
     data: str,
 ) -> None:
@@ -114,12 +114,12 @@ def main(
     classes = test_data.classes
     num_classes = len(classes)
 
-    if not os.path.exists(checkpoint_dir):
+    if not checkpoint_dir.exists():
         raise FileNotFoundError(f"Checkpoint directory {checkpoint_dir} not found")
 
-    checkpoint_list = os.listdir(checkpoint_dir)
+    checkpoint_list = list(checkpoint_dir.glob("epoch_*.pt"))
     checkpoint_list = sorted(
-        checkpoint_list, key=lambda x: int(x.split("_")[-1].split(".")[0])
+        checkpoint_list, key=lambda x: int(x.name.split("_")[-1].split(".")[0])
     )
 
     if len(checkpoint_list) == 0:
@@ -130,10 +130,9 @@ def main(
             f"Checkpoint number {checkpoint_num} not in range [-1, {len(checkpoint_list)})"
         )
 
-    checkpoint_file = checkpoint_list[checkpoint_num]
-    checkpoint_path = os.path.join(checkpoint_dir, checkpoint_file)
+    checkpoint_path = checkpoint_list[checkpoint_num]
 
-    if not os.path.exists(checkpoint_path):
+    if not checkpoint_path.exists():
         raise ValueError(f"Checkpoint file {checkpoint_path} not found")
 
     model, _ = torch.load(checkpoint_path, weights_only=False)
@@ -190,10 +189,12 @@ if __name__ == "__main__":
 
     args = args.parse_args()
 
+    checkpoint_dir = Path(args.checkpoint_dir)
+
     main(
         batch_size=args.batch_size,
         data_dir=args.data_dir,
-        checkpoint_dir=args.checkpoint_dir,
+        checkpoint_dir=checkpoint_dir,
         checkpoint_num=args.checkpoint_num,
         data=args.data,
     )

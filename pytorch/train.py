@@ -1,21 +1,21 @@
 import argparse
-import os
+from pathlib import Path
 import time
-
-from model import create_model
-from eval import calc_accuracy
 
 import torch
 from torch.utils.data import DataLoader
 import torchvision as tv
+
+from eval import calc_accuracy
+from model import create_model
 
 
 def main(
     learning_rate: float,
     batch_size: int,
     num_epochs: int,
-    data_dir: str,
-    checkpoint_dir: str,
+    data_dir: Path,
+    checkpoint_dir: Path,
     data: str,
 ) -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -84,11 +84,11 @@ def main(
     classes = train_data.classes
     num_classes = len(classes)
 
-    os.makedirs(checkpoint_dir, exist_ok=True)
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
-    checkpoint_list = os.listdir(checkpoint_dir)
+    checkpoint_list = list(checkpoint_dir.glob("epoch_*.pt"))
     checkpoint_list = sorted(
-        checkpoint_list, key=lambda x: int(x.split("_")[-1].split(".")[0])
+        checkpoint_list, key=lambda x: int(x.name.split("_")[-1].split(".")[0])
     )
 
     if len(checkpoint_list) == 0:
@@ -99,12 +99,11 @@ def main(
 
         checkpoint_num = 0
     else:
-        checkpoint_file = checkpoint_list[-1]
-        checkpoint_path = os.path.join(checkpoint_dir, checkpoint_file)
+        checkpoint_path = checkpoint_list[-1]
 
         model, optimizer = torch.load(checkpoint_path, weights_only=False)
 
-        checkpoint_num = int(checkpoint_file.split("_")[-1].split(".")[0]) + 1
+        checkpoint_num = int(checkpoint_path.name.split("_")[-1].split(".")[0]) + 1
 
     num_params = sum(p.numel() for p in model.parameters())
 
@@ -160,9 +159,7 @@ def main(
             flush=True,
         )
 
-        torch.save(
-            (model, optimizer), os.path.join(checkpoint_dir, f"epoch_{epoch}.pt")
-        )
+        torch.save((model, optimizer), checkpoint_dir / f"epoch_{epoch}.pt")
 
     best_epoch, best_accuracy = max(enumerate(accuracies), key=lambda x: x[1])
     best_epoch += checkpoint_num
@@ -193,11 +190,14 @@ if __name__ == "__main__":
 
     args = args.parse_args()
 
+    data_dir = Path(args.data_dir)
+    checkpoint_dir = Path(args.checkpoint_dir)
+
     main(
         learning_rate=args.learning_rate,
         batch_size=args.batch_size,
         num_epochs=args.num_epochs,
-        data_dir=args.data_dir,
-        checkpoint_dir=args.checkpoint_dir,
+        data_dir=data_dir,
+        checkpoint_dir=checkpoint_dir,
         data=args.data,
     )
