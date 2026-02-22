@@ -7,7 +7,7 @@ import torch
 def main(
     checkpoint_dir: Path, checkpoint_num: str, model_name: str, add_argmax: bool
 ) -> None:
-    if not checkpoint_dir.exists():
+    if not checkpoint_dir.exists() or not checkpoint_dir.is_dir():
         raise FileNotFoundError(f"Checkpoint directory {checkpoint_dir} not found")
 
     checkpoint_list = list(checkpoint_dir.glob("epoch_*.pt"))
@@ -25,7 +25,7 @@ def main(
 
     checkpoint_path = checkpoint_list[checkpoint_num]
 
-    if not checkpoint_path.exists():
+    if not checkpoint_path.exists() or not checkpoint_path.is_file():
         raise ValueError(f"Checkpoint file {checkpoint_path} not found")
 
     model, _ = torch.load(checkpoint_path, weights_only=False)

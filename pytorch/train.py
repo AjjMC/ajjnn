@@ -1,13 +1,12 @@
 import argparse
-from pathlib import Path
 import time
+from pathlib import Path
 
 import torch
-from torch.utils.data import DataLoader
-import torchvision as tv
+from torch.utils.data import DataLoader, Dataset
 
-from eval import calc_accuracy
-from model import create_model
+from model import get_model
+from utils import calc_accuracy, get_data, get_data_loaders, get_num_features
 
 
 def main(
@@ -20,70 +19,48 @@ def main(
 ) -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    if "emnist" in data:
-        emnist_split = data.split("_")[1]
+    train_data, test_data = get_data(data, data_dir)
 
-        train_data = tv.datasets.EMNIST(
-            root=data_dir,
-            split=emnist_split,
-            train=True,
-            transform=tv.transforms.Compose(
-                [
-                    lambda image: tv.transforms.functional.rotate(image, -90),
-                    lambda image: tv.transforms.functional.hflip(image),
-                    tv.transforms.ToTensor(),
-                ]
-            ),
-            download=True,
-        )
-
-        test_data = tv.datasets.EMNIST(
-            root=data_dir,
-            split=emnist_split,
-            train=False,
-            transform=tv.transforms.Compose(
-                [
-                    lambda image: tv.transforms.functional.rotate(image, -90),
-                    lambda image: tv.transforms.functional.hflip(image),
-                    tv.transforms.ToTensor(),
-                ]
-            ),
-            download=True,
-        )
-
-    elif data == "cifar10":
-        train_data = tv.datasets.CIFAR10(
-            root=data_dir, train=True, transform=tv.transforms.ToTensor(), download=True
-        )
-
-        test_data = tv.datasets.CIFAR10(
-            root=data_dir,
-            train=False,
-            transform=tv.transforms.ToTensor(),
-            download=True,
-        )
-
-    elif data == "cifar100":
-        train_data = tv.datasets.CIFAR100(
-            root=data_dir, train=True, transform=tv.transforms.ToTensor(), download=True
-        )
-
-        test_data = tv.datasets.CIFAR100(
-            root=data_dir,
-            train=False,
-            transform=tv.transforms.ToTensor(),
-            download=True,
-        )
-
-    num_features = (
-        train_data[0][0].shape[0]
-        * train_data[0][0].shape[1]
-        * train_data[0][0].shape[2]
+    train_data_loader, test_data_loader = get_data_loaders(
+        train_data, test_data, batch_size
     )
 
-    classes = train_data.classes
+    num_features = get_num_features(test_data)
+
+    classes = test_data.classes
     num_classes = len(classes)
 
+    model, optimizer, checkpoint_num = laod_epoch(
+        checkpoint_dir, data, num_features, num_classes, device, learning_rate
+    )
+
+    num_params = sum(p.numel() for p in model.parameters())
+
+    print(f"{data}, Classes {num_classes}: {classes}", flush=True)
+    print("Number of Parameters:", num_params, flush=True)
+    print("Training on", device, flush=True)
+
+    train_model(
+        checkpoint_num,
+        num_epochs,
+        train_data_loader,
+        device,
+        num_features,
+        optimizer,
+        model,
+        test_data_loader,
+        checkpoint_dir,
+    )
+
+
+def laod_epoch(
+    checkpoint_dir: Path,
+    data: str,
+    num_features: int,
+    num_classes: int,
+    device: torch.device,
+    learning_rate: float,
+) -> tuple[torch.nn.Module, torch.optim.Optimizer, int]:
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
     checkpoint_list = list(checkpoint_dir.glob("epoch_*.pt"))
@@ -92,7 +69,7 @@ def main(
     )
 
     if len(checkpoint_list) == 0:
-        model = create_model(num_features, num_classes, data)
+        model = get_model(data, num_features, num_classes)
         model = model.to(device)
 
         optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -105,18 +82,20 @@ def main(
 
         checkpoint_num = int(checkpoint_path.name.split("_")[-1].split(".")[0]) + 1
 
-    num_params = sum(p.numel() for p in model.parameters())
+    return model, optimizer, checkpoint_num
 
-    train_data_loader = DataLoader(
-        dataset=train_data, batch_size=batch_size, shuffle=True
-    )
 
-    test_data_loader = DataLoader(dataset=test_data, batch_size=batch_size)
-
-    print(f"{data}, {num_classes} Classes: {classes}", flush=True)
-    print("Number of Parameters:", num_params, flush=True)
-    print("Training on", device, flush=True)
-
+def train_model(
+    checkpoint_num: int,
+    num_epochs: int,
+    train_data_loader: DataLoader,
+    device: torch.device,
+    num_features: int,
+    optimizer: torch.optim.Optimizer,
+    model: torch.nn.Module,
+    test_data_loader: DataLoader,
+    checkpoint_dir: Path,
+) -> list[float]:
     accuracies = []
 
     for epoch in range(checkpoint_num, checkpoint_num + num_epochs):
@@ -148,7 +127,7 @@ def main(
 
         avg_loss /= len_data_loader
 
-        accuracy = calc_accuracy(model, test_data_loader)
+        accuracy = calc_accuracy(model, test_data_loader, device, num_features)
 
         accuracies.append(accuracy)
 
@@ -178,13 +157,7 @@ if __name__ == "__main__":
     args.add_argument(
         "--data",
         type=str,
-        choices=[
-            "emnist_balanced",
-            "emnist_letters",
-            "emnist_digits",
-            "cifar10",
-            "cifar100",
-        ],
+        choices=["emnist_balanced", "emnist_letters", "emnist_digits"],
         default="emnist_digits",
     )
 

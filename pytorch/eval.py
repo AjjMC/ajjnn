@@ -2,71 +2,15 @@ import argparse
 from pathlib import Path
 
 import torch
-from torch.utils.data import DataLoader
 import torchvision as tv
 
-
-@torch.inference_mode()
-def calc_accuracy(
-    model: torch.nn.Module, data_loader: torch.utils.data.DataLoader
-) -> float:
-    device = next(model.parameters()).device
-
-    training = True if model.training else False
-    model.eval()
-
-    correct = 0
-    total = 0
-
-    for images, labels in data_loader:
-        images = images.to(device)
-        images = images.view(-1, images.shape[1] * images.shape[2] * images.shape[3])
-        images = torch.where(
-            images >= 0.5, torch.ones_like(images), torch.zeros_like(images)
-        )
-
-        labels = labels.to(device)
-
-        outputs = model(images)
-
-        output_indexes = torch.argmax(outputs, dim=1)
-
-        correct += (output_indexes == labels).sum().item()
-        total += labels.size(0)
-
-    if training:
-        model.train()
-
-    accuracy = 100 * correct / total
-
-    return accuracy
-
-
-@torch.inference_mode()
-def test_classifier(model: torch.nn.Module, data_loader: torch.utils.data.DataLoader):
-    device = next(model.parameters()).device
-
-    classes = data_loader.dataset.classes
-
-    images, labels = next(iter(data_loader))
-
-    image = images[0]
-    image = image.to(device)
-    image = image.unsqueeze(0)
-    image = image.view(-1, image.shape[1] * image.shape[2] * image.shape[3])
-    image = torch.where(image >= 0.5, torch.ones_like(image), torch.zeros_like(image))
-
-    label = labels[0]
-
-    output = model(image)
-    output_index = torch.argmax(output).item()
-    output_class = classes[output_index]
-    target_class = classes[label]
-
-    image = images[0]
-    image = torch.where(image >= 0.5, torch.ones_like(image), torch.zeros_like(image))
-
-    return image, classes, output, output_class, output_index, target_class, label
+from utils import (
+    calc_accuracy,
+    get_data,
+    get_data_loaders,
+    get_num_features,
+    test_model,
+)
 
 
 def main(
@@ -78,43 +22,41 @@ def main(
 ) -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    if "emnist" in data:
-        emnist_split = data.split("_")[1]
+    _, test_data = get_data(data, data_dir)
 
-        test_data = tv.datasets.EMNIST(
-            root=data_dir,
-            split=emnist_split,
-            train=False,
-            transform=tv.transforms.Compose(
-                [
-                    lambda image: tv.transforms.functional.rotate(image, -90),
-                    lambda image: tv.transforms.functional.hflip(image),
-                    tv.transforms.ToTensor(),
-                ]
-            ),
-            download=True,
-        )
+    _, test_data_loader = get_data_loaders(None, test_data, batch_size)
 
-    elif data == "cifar10":
-        test_data = tv.datasets.CIFAR10(
-            root=data_dir,
-            train=False,
-            transform=tv.transforms.ToTensor(),
-            download=True,
-        )
-
-    elif data == "cifar100":
-        test_data = tv.datasets.CIFAR100(
-            root=data_dir,
-            train=False,
-            transform=tv.transforms.ToTensor(),
-            download=True,
-        )
+    num_features = get_num_features(test_data)
 
     classes = test_data.classes
     num_classes = len(classes)
 
-    if not checkpoint_dir.exists():
+    model = load_epoch(checkpoint_dir, checkpoint_num, device)
+
+    num_params = sum(p.numel() for p in model.parameters())
+
+    print(f"{data}, {num_classes} Classes: {classes}", flush=True)
+    print("Number of Parameters:", num_params, flush=True)
+
+    accuracy = calc_accuracy(model, test_data_loader, device, num_features)
+
+    print(f"Accuracy: {accuracy:.2f}%", flush=True)
+
+    image, output, output_class, output_index, target_class, label = test_model(
+        model, test_data_loader, device, num_features, classes
+    )
+
+    tv.utils.save_image(image, f"{data}_{target_class}.png")
+
+    print(f"Output: {output}", flush=True)
+    print(f"Output Class: {output_class} ({output_index})", flush=True)
+    print(f"Target Class: {target_class} ({label})", flush=True)
+
+
+def load_epoch(
+    checkpoint_dir: Path, checkpoint_num: int, device: torch.device
+) -> torch.nn.Module:
+    if not checkpoint_dir.exists() or not checkpoint_dir.is_dir():
         raise FileNotFoundError(f"Checkpoint directory {checkpoint_dir} not found")
 
     checkpoint_list = list(checkpoint_dir.glob("epoch_*.pt"))
@@ -132,39 +74,13 @@ def main(
 
     checkpoint_path = checkpoint_list[checkpoint_num]
 
-    if not checkpoint_path.exists():
+    if not checkpoint_path.exists() or not checkpoint_path.is_file():
         raise ValueError(f"Checkpoint file {checkpoint_path} not found")
 
     model, _ = torch.load(checkpoint_path, weights_only=False)
     model = model.to(device)
 
-    num_classes_model = model[-1].out_features
-
-    if num_classes_model != num_classes:
-        raise ValueError(
-            "Number of model classes ({num_classes_model}) does not match number of dataset classes ({num_classes})"
-        )
-
-    num_params = sum(p.numel() for p in model.parameters())
-
-    data_loader = DataLoader(dataset=test_data, batch_size=batch_size)
-
-    print(f"{data}, {num_classes} Classes: {classes}", flush=True)
-    print("Number of Parameters:", num_params, flush=True)
-
-    accuracy = calc_accuracy(model, data_loader)
-
-    print(f"Accuracy: {accuracy:.2f}%", flush=True)
-
-    image, classes, output, output_class, output_index, target_class, label = (
-        test_classifier(model, data_loader)
-    )
-
-    tv.utils.save_image(image, f"{data}_{target_class}.png")
-
-    print(f"Output: {output}", flush=True)
-    print(f"Output Class: {output_class} ({output_index})", flush=True)
-    print(f"Target Class: {target_class} ({label})", flush=True)
+    return model
 
 
 if __name__ == "__main__":
@@ -177,13 +93,7 @@ if __name__ == "__main__":
     args.add_argument(
         "--data",
         type=str,
-        choices=[
-            "emnist_balanced",
-            "emnist_letters",
-            "emnist_digits",
-            "cifar10",
-            "cifar100",
-        ],
+        choices=["emnist_balanced", "emnist_letters", "emnist_digits"],
         default="emnist_digits",
     )
 
