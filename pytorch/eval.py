@@ -1,4 +1,5 @@
-import argparse
+import logging
+from argparse import ArgumentParser
 from pathlib import Path
 
 import torch
@@ -15,9 +16,9 @@ from utils import (
 
 def main(
     batch_size: int,
-    data_dir: str,
+    data_dir: Path,
     checkpoint_dir: Path,
-    checkpoint_num: str,
+    checkpoint_num: int,
     data: str,
 ) -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -35,12 +36,12 @@ def main(
 
     num_params = sum(p.numel() for p in model.parameters())
 
-    print(f"{data}, {num_classes} Classes: {classes}", flush=True)
-    print("Number of Parameters:", num_params, flush=True)
+    logger.info("%s, Classes (%d): %s", data, num_classes, classes)
+    logger.info("Number of Parameters: %d", num_params)
 
     accuracy = calc_accuracy(model, test_data_loader, device, num_features)
 
-    print(f"Accuracy: {accuracy:.2f}%", flush=True)
+    logger.info("Accuracy: %.2f%%", accuracy)
 
     image, output, output_class, output_index, target_class, label = test_model(
         model, test_data_loader, device, num_features, classes
@@ -48,16 +49,18 @@ def main(
 
     tv.utils.save_image(image, f"{data}_{target_class}.png")
 
-    print(f"Output: {output}", flush=True)
-    print(f"Output Class: {output_class} ({output_index})", flush=True)
-    print(f"Target Class: {target_class} ({label})", flush=True)
+    logger.info("Output: %s", output)
+    logger.info("Output Class: %s (%d)", output_class, output_index)
+    logger.info("Target Class: %s (%d)", target_class, label)
 
 
 def load_epoch(
     checkpoint_dir: Path, checkpoint_num: int, device: torch.device
 ) -> torch.nn.Module:
     if not checkpoint_dir.exists() or not checkpoint_dir.is_dir():
-        raise FileNotFoundError(f"Checkpoint directory {checkpoint_dir} not found")
+        raise RuntimeError(
+            f"Checkpoint directory {checkpoint_dir} is missing or invalid"
+        )
 
     checkpoint_list = list(checkpoint_dir.glob("epoch_*.pt"))
     checkpoint_list = sorted(
@@ -65,17 +68,17 @@ def load_epoch(
     )
 
     if len(checkpoint_list) == 0:
-        raise ValueError(f"Checkpoint directory {checkpoint_dir} is empty")
+        raise RuntimeError(f"Checkpoint directory {checkpoint_dir} is empty")
 
     if checkpoint_num not in range(-1, len(checkpoint_list)):
-        raise ValueError(
-            f"Checkpoint number {checkpoint_num} not in range [-1, {len(checkpoint_list)})"
+        raise RuntimeError(
+            f"Checkpoint number {checkpoint_num} is not in range [-1, {len(checkpoint_list)})"
         )
 
     checkpoint_path = checkpoint_list[checkpoint_num]
 
     if not checkpoint_path.exists() or not checkpoint_path.is_file():
-        raise ValueError(f"Checkpoint file {checkpoint_path} not found")
+        raise RuntimeError(f"Checkpoint file {checkpoint_path} is missing or invalid")
 
     model, _ = torch.load(checkpoint_path, weights_only=False)
     model = model.to(device)
@@ -84,11 +87,11 @@ def load_epoch(
 
 
 if __name__ == "__main__":
-    args = argparse.ArgumentParser()
+    args = ArgumentParser()
 
     args.add_argument("--batch_size", type=int, default=64)
-    args.add_argument("--data_dir", type=str, default="data")
-    args.add_argument("--checkpoint_dir", type=str, default="checkpoints")
+    args.add_argument("--data_dir", type=Path, default="data")
+    args.add_argument("--checkpoint_dir", type=Path, default="checkpoints")
     args.add_argument("--checkpoint_num", type=int, default=-1)
     args.add_argument(
         "--data",
@@ -99,12 +102,12 @@ if __name__ == "__main__":
 
     args = args.parse_args()
 
-    checkpoint_dir = Path(args.checkpoint_dir)
+    logger = logging.getLogger(__name__)
 
     main(
         batch_size=args.batch_size,
         data_dir=args.data_dir,
-        checkpoint_dir=checkpoint_dir,
+        checkpoint_dir=args.checkpoint_dir,
         checkpoint_num=args.checkpoint_num,
         data=args.data,
     )

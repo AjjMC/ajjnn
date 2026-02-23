@@ -1,9 +1,10 @@
-import argparse
+import logging
 import time
+from argparse import ArgumentParser
 from pathlib import Path
 
 import torch
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader
 
 from model import get_model
 from utils import calc_accuracy, get_data, get_data_loaders, get_num_features
@@ -36,9 +37,9 @@ def main(
 
     num_params = sum(p.numel() for p in model.parameters())
 
-    print(f"{data}, Classes {num_classes}: {classes}", flush=True)
-    print("Number of Parameters:", num_params, flush=True)
-    print("Training on", device, flush=True)
+    logger.info("%s, Classes (%d): %s", data, num_classes, classes)
+    logger.info("Number of Parameters: %d", num_params)
+    logger.info("Training on %s", device)
 
     train_model(
         checkpoint_num,
@@ -133,9 +134,12 @@ def train_model(
 
         duration = round(time.perf_counter() - start)
 
-        print(
-            f"Epoch: {epoch}, Train Loss: {avg_loss:.4f}, Test Accuracy: {accuracy:.2f}%, Duration: {duration} s",
-            flush=True,
+        logger.info(
+            "Epoch: %d, Train Loss: %.4f, Test Accuracy: %.2f%%, Duration: %d s",
+            epoch,
+            avg_loss,
+            accuracy,
+            duration,
         )
 
         torch.save((model, optimizer), checkpoint_dir / f"epoch_{epoch}.pt")
@@ -143,17 +147,17 @@ def train_model(
     best_epoch, best_accuracy = max(enumerate(accuracies), key=lambda x: x[1])
     best_epoch += checkpoint_num
 
-    print(f"Best Epoch: {best_epoch}, Test Accuracy: {best_accuracy:.2f}%", flush=True)
+    logger.info("Best Epoch: %d, Test Accuracy: %.2f%%", best_epoch, best_accuracy)
 
 
 if __name__ == "__main__":
-    args = argparse.ArgumentParser()
+    args = ArgumentParser()
 
     args.add_argument("--learning_rate", type=float, default=1e-3)
     args.add_argument("--batch_size", type=int, default=64)
     args.add_argument("--num_epochs", type=int, default=10)
-    args.add_argument("--data_dir", type=str, default="data")
-    args.add_argument("--checkpoint_dir", type=str, default="checkpoints")
+    args.add_argument("--data_dir", type=Path, default="data")
+    args.add_argument("--checkpoint_dir", type=Path, default="checkpoints")
     args.add_argument(
         "--data",
         type=str,
@@ -163,14 +167,13 @@ if __name__ == "__main__":
 
     args = args.parse_args()
 
-    data_dir = Path(args.data_dir)
-    checkpoint_dir = Path(args.checkpoint_dir)
+    logger = logging.getLogger(__name__)
 
     main(
         learning_rate=args.learning_rate,
         batch_size=args.batch_size,
         num_epochs=args.num_epochs,
-        data_dir=data_dir,
-        checkpoint_dir=checkpoint_dir,
+        data_dir=args.data_dir,
+        checkpoint_dir=args.checkpoint_dir,
         data=args.data,
     )
