@@ -6,7 +6,7 @@ import torch
 
 
 def main(
-    checkpoint_dir: Path, checkpoint_num: str, model_name: str, add_argmax: bool
+    add_argmax: bool, checkpoint_dir: Path, checkpoint_num: str, model_name: str
 ) -> None:
     if not checkpoint_dir.exists() or not checkpoint_dir.is_dir():
         raise RuntimeError(
@@ -119,18 +119,23 @@ def main(
 if __name__ == "__main__":
     parser = ArgumentParser()
 
+    parser.add_argument("--add_argmax", action=BooleanOptionalAction, default=False)
     parser.add_argument("--checkpoint_dir", type=Path, default="checkpoints")
     parser.add_argument("--checkpoint_num", type=int, default=-1)
     parser.add_argument("--model_name", type=str, default="model")
-    parser.add_argument("--add_argmax", action=BooleanOptionalAction, default=False)
 
     args = parser.parse_args()
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(message)s",
+    )
 
     logger = logging.getLogger(__name__)
 
     main(
+        add_argmax=args.add_argmax,
         checkpoint_dir=args.checkpoint_dir,
         checkpoint_num=args.checkpoint_num,
         model_name=args.model_name,
-        add_argmax=args.add_argmax,
     )

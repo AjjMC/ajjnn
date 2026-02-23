@@ -11,28 +11,33 @@ from utils import calc_accuracy, get_data, get_data_loaders, get_num_features
 
 
 def main(
-    learning_rate: float,
     batch_size: int,
-    num_epochs: int,
-    data_dir: Path,
     checkpoint_dir: Path,
     data: str,
+    data_dir: Path,
+    learning_rate: float,
+    num_epochs: int,
 ) -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    train_data, test_data = get_data(data, data_dir)
+    train_data, test_data = get_data(data=data, data_dir=data_dir)
 
     train_data_loader, test_data_loader = get_data_loaders(
-        train_data, test_data, batch_size
+        train_data=train_data, test_data=test_data, batch_size=batch_size
     )
 
-    num_features = get_num_features(test_data)
+    num_features = get_num_features(test_data=test_data)
 
     classes = test_data.classes
     num_classes = len(classes)
 
     model, optimizer, checkpoint_num = laod_epoch(
-        checkpoint_dir, data, num_features, num_classes, device, learning_rate
+        data=data,
+        num_features=num_features,
+        num_classes=num_classes,
+        learning_rate=learning_rate,
+        checkpoint_dir=checkpoint_dir,
+        device=device,
     )
 
     num_params = sum(p.numel() for p in model.parameters())
@@ -42,25 +47,25 @@ def main(
     logger.info("Training on %s", device)
 
     train_model(
-        checkpoint_num,
-        num_epochs,
-        train_data_loader,
-        device,
-        num_features,
-        optimizer,
-        model,
-        test_data_loader,
-        checkpoint_dir,
+        model=model,
+        optimizer=optimizer,
+        train_data_loader=train_data_loader,
+        test_data_loader=test_data_loader,
+        num_features=num_features,
+        num_epochs=num_epochs,
+        checkpoint_num=checkpoint_num,
+        checkpoint_dir=checkpoint_dir,
+        device=device,
     )
 
 
 def laod_epoch(
-    checkpoint_dir: Path,
     data: str,
     num_features: int,
     num_classes: int,
-    device: torch.device,
     learning_rate: float,
+    checkpoint_dir: Path,
+    device: torch.device,
 ) -> tuple[torch.nn.Module, torch.optim.Optimizer, int]:
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
@@ -87,15 +92,15 @@ def laod_epoch(
 
 
 def train_model(
-    checkpoint_num: int,
-    num_epochs: int,
-    train_data_loader: DataLoader,
-    device: torch.device,
-    num_features: int,
-    optimizer: torch.optim.Optimizer,
     model: torch.nn.Module,
+    optimizer: torch.optim.Optimizer,
+    train_data_loader: DataLoader,
     test_data_loader: DataLoader,
+    num_features: int,
+    num_epochs: int,
+    checkpoint_num: int,
     checkpoint_dir: Path,
+    device: torch.device,
 ) -> list[float]:
     accuracies = []
 
@@ -153,10 +158,7 @@ def train_model(
 if __name__ == "__main__":
     args = ArgumentParser()
 
-    args.add_argument("--learning_rate", type=float, default=1e-3)
     args.add_argument("--batch_size", type=int, default=64)
-    args.add_argument("--num_epochs", type=int, default=10)
-    args.add_argument("--data_dir", type=Path, default="data")
     args.add_argument("--checkpoint_dir", type=Path, default="checkpoints")
     args.add_argument(
         "--data",
@@ -164,16 +166,24 @@ if __name__ == "__main__":
         choices=["emnist_balanced", "emnist_letters", "emnist_digits"],
         default="emnist_digits",
     )
+    args.add_argument("--data_dir", type=Path, default="data")
+    args.add_argument("--learning_rate", type=float, default=1e-3)
+    args.add_argument("--num_epochs", type=int, default=10)
 
     args = args.parse_args()
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(message)s",
+    )
 
     logger = logging.getLogger(__name__)
 
     main(
-        learning_rate=args.learning_rate,
         batch_size=args.batch_size,
-        num_epochs=args.num_epochs,
-        data_dir=args.data_dir,
         checkpoint_dir=args.checkpoint_dir,
         data=args.data,
+        data_dir=args.data_dir,
+        learning_rate=args.learning_rate,
+        num_epochs=args.num_epochs,
     )

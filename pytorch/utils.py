@@ -9,8 +9,8 @@ from torch.utils.data import DataLoader, Dataset
 def calc_accuracy(
     model: torch.nn.Module,
     test_data_loader: DataLoader,
-    device: torch.device,
     num_features: int,
+    device: torch.device,
 ) -> float:
     training = True if model.training else False
     model.eval()
@@ -101,9 +101,9 @@ def get_num_features(test_data: Dataset) -> int:
 def test_model(
     model: torch.nn.Module,
     test_data_loader: DataLoader,
-    device: torch.device,
     num_features: int,
     classes: list[str],
+    device: torch.device,
 ) -> tuple[torch.Tensor, torch.Tensor, str, int, str, int]:
     images, labels = next(iter(test_data_loader))
 
