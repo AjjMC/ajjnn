@@ -1,8 +1,8 @@
-tellraw @s {text:"/function ajjnn:__crediting",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__crediting"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:__demo/",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__demo/"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:__forward",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__forward"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:__help",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__help"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:__install",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__install"},hover_event:{action:"show_text",value:"Click Here"}}
+tellraw @s {text:"/function ajjnn:__license",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__license"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:__load {model:<model_name>}",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__load"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:__manual",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__manual"},hover_event:{action:"show_text",value:"Click Here"}}
 tellraw @s {text:"/function ajjnn:__uninstall",color:"green",click_event:{action:"suggest_command",command:"/function ajjnn:__uninstall"},hover_event:{action:"show_text",value:"Click Here"}}

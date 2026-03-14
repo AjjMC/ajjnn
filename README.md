@@ -27,12 +27,12 @@ After this datapack has been added to the "datapacks" folder of a Minecraft worl
 
 | Function                                        | Description                                         |
 |:------------------------------------------------|:----------------------------------------------------|
-| ``/function ajjnn:__crediting``                 | Displays datapack crediting information             |
 | ``/function ajjnn:__demo/kit``                  | Gives demo kit                                      |
 | ``/function ajjnn:__demo/place_canvas``         | Places or relocates demo canvas                     |
 | ``/function ajjnn:__demo/remove_canvas``        | Removes demo canvas                                 |
 | ``/function ajjnn:__forward``                   | Performs forward pass                               |
 | ``/function ajjnn:__help``                      | Displays datapack command list                      |
+| ``/function ajjnn:__license``                   | Displays datapack license information               |
 | ``/function ajjnn:__load {model:<model_name>}`` | Loads PyTorch model into Minecraft                  |
 | ``/function ajjnn:__install``                   | Installs datapack                                   |
 | ``/function ajjnn:__manual``                    | Displays datapack manual link                       |
@@ -71,6 +71,6 @@ The neural networks receive an input vector of 784 features, which take the valu
 
 The currently loaded model's architecture and parameters are stored in the ``ajjnn:data modules`` SNBT. Mapmakers can set the input ``ajjnn:data in``, perform a forward pass with ``/function ajjnn:__forward``, and retrieve the output ``ajjnn:data out``. The status of the model is determined by the ``ajjnn:data status`` SNBT. If this value is set to ``0b``, the model is idle and can be used. If it is set to ``1b``, the model is running and cannot be used. Once the output has been calculated, this value is set to ``2b`` for a single tick and then back to ``0b``.
 
-## Crediting
+## License
 
 Made by Ajj and published under the MIT license. Please share the repository link.
