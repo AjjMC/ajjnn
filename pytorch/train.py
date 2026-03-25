@@ -133,7 +133,7 @@ def train_model(
 
         avg_loss /= len_data_loader
 
-        accuracy = calc_accuracy(model, test_data_loader, device, num_features)
+        accuracy = calc_accuracy(model, test_data_loader, num_features, device)
 
         accuracies.append(accuracy)
 

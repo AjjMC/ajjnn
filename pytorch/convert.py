@@ -111,7 +111,7 @@ def main(
 
     logger.info("Model %s has been converted for use in Minecraft", model_name)
     logger.info(
-        'If ajjnn is installed, reload the datapack and run /function ajjnn:__load {{model:"%s"}} to load the model into the game',
+        'If ajjnn is installed, reload the datapack and run /function ajjnn:__load {model:"%s"} to load the model into the game',
         model_name,
     )
 
