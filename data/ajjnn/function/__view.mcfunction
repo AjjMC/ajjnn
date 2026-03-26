@@ -7,7 +7,7 @@ execute if data storage ajjnn:data {modules:[]} run return fail
 scoreboard players set #modules_count ajjnn 0
 execute store result score #modules_length ajjnn run data get storage ajjnn:data modules
 
-tellraw @s [{text:"Name: "},{storage:"ajjnn:data",nbt:"model_name",color:"gray"}]
-tellraw @s [{text:"Parameters: "},{storage:"ajjnn:data",nbt:"num_params",color:"gray"}]
+tellraw @s [{text:"Name: "},{storage:"ajjnn:data",nbt:"model_name",interpret:true,color:"gray"}]
+tellraw @s [{text:"Parameters: "},{storage:"ajjnn:data",nbt:"num_params",interpret:true,color:"gray"}]
 
 execute if score #modules_count ajjnn < #modules_length ajjnn run function ajjnn:view/loop

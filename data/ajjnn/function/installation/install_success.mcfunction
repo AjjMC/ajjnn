@@ -12,7 +12,7 @@ function ajjnn:installation/set_version
 data modify storage ajjnn:data version set from storage ajjnn:data temp.version
 
 tellraw @a [{text:"Installed "},{text:"ajjnn",color:"gray"}]
-tellraw @a [{text:"Version: "},{nbt:"version",storage:"ajjnn:data",color:"gray"},{text:"\n"}]
+tellraw @a [{text:"Version: "},{storage:"ajjnn:data",nbt:"version",interpret:true,color:"gray"},{text:"\n"}]
 
 execute as @a run function ajjnn:__license
 

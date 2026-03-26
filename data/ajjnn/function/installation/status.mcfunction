@@ -7,7 +7,7 @@ scoreboard objectives add ajjnn.temp dummy
 
 execute store success score #bool ajjnn.temp run data modify storage ajjnn:data temp.version set from storage ajjnn:data version
 execute if data storage ajjnn:data version if score #bool ajjnn.temp matches 1 run function ajjnn:__install
-execute if data storage ajjnn:data version if score #bool ajjnn.temp matches 1 run tellraw @a [{text:"\nUpdated "},{text:"ajjnn",color:"gray"},{text:" to version "},{nbt:"version",storage:"ajjnn:data",color:"gray"}]
+execute if data storage ajjnn:data version if score #bool ajjnn.temp matches 1 run tellraw @a [{text:"\nUpdated "},{text:"ajjnn",color:"gray"},{text:" to version "},{storage:"ajjnn:data",nbt:"version",interpret:true,color:"gray"}]
 
 scoreboard players reset #bool ajjnn.temp
 scoreboard objectives remove ajjnn.temp
