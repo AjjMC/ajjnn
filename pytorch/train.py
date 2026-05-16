@@ -156,21 +156,21 @@ def train_model(
 
 
 if __name__ == "__main__":
-    args = ArgumentParser()
+    parser = ArgumentParser()
 
-    args.add_argument("--batch_size", type=int, default=64)
-    args.add_argument("--checkpoint_dir", type=Path, default="checkpoints")
-    args.add_argument(
+    parser.add_argument("--batch_size", type=int, default=64)
+    parser.add_argument("--checkpoint_dir", type=Path, default="checkpoints")
+    parser.add_argument(
         "--data",
         type=str,
         choices=["emnist_balanced", "emnist_letters", "emnist_digits"],
         default="emnist_digits",
     )
-    args.add_argument("--data_dir", type=Path, default="data")
-    args.add_argument("--learning_rate", type=float, default=1e-3)
-    args.add_argument("--num_epochs", type=int, default=10)
+    parser.add_argument("--data_dir", type=Path, default="data")
+    parser.add_argument("--learning_rate", type=float, default=1e-3)
+    parser.add_argument("--num_epochs", type=int, default=10)
 
-    args = args.parse_args()
+    args = parser.parse_args()
 
     logging.basicConfig(
         level=logging.INFO,
