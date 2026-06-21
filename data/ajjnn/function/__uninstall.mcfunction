@@ -1,1 +1,1 @@
-function ajjnn:installation/uninstall_success
+function ajjnn:general/uninstall_success

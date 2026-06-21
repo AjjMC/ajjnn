@@ -1,1 +1,1 @@
-function ajjnn:installation/install_success
+function ajjnn:general/install_success

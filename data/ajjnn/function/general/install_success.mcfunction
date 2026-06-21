@@ -8,7 +8,7 @@ execute unless data storage ajjnn:data version run data modify storage ajjnn:dat
 execute unless data storage ajjnn:data version run data modify storage ajjnn:data status set value 0b
 execute unless data storage ajjnn:data version run data modify storage ajjnn:data values set value []
 
-function ajjnn:installation/set_version
+function ajjnn:general/set_version
 data modify storage ajjnn:data version set from storage ajjnn:data temp.version
 
 tellraw @a [{text:"Installed "},{text:"ajjnn",color:"gray"}]

@@ -1,7 +1,7 @@
 execute at @e[type=minecraft:marker,tag=ajjnn.canvas] run fill ~ ~ ~ ~-27 ~ ~-27 minecraft:air
 kill @e[type=minecraft:marker,tag=ajjnn.canvas]
 
-function ajjnn:installation/clear_schedules
+function ajjnn:general/clear_schedules
 
 scoreboard players reset #column_count ajjnn
 scoreboard players reset #columns_length ajjnn
