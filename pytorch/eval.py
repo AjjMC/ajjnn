@@ -4,14 +4,9 @@ from pathlib import Path
 
 import torch
 import torchvision as tv
+from torch.utils.data import DataLoader
 
-from utils import (
-    calc_accuracy,
-    get_data,
-    get_data_loaders,
-    get_num_features,
-    test_model,
-)
+from utils import calc_accuracy, get_data
 
 
 def main(
@@ -25,16 +20,16 @@ def main(
 
     _, test_data = get_data(data=data, data_dir=data_dir)
 
-    _, test_data_loader = get_data_loaders(
-        train_data=None, test_data=test_data, batch_size=batch_size
-    )
+    test_data_loader = DataLoader(dataset=test_data, batch_size=batch_size)
 
-    num_features = get_num_features(test_data=test_data)
+    num_features = (
+        test_data[0][0].shape[0] * test_data[0][0].shape[1] * test_data[0][0].shape[2]
+    )
 
     classes = test_data.classes
     num_classes = len(classes)
 
-    model = load_epoch(
+    model = load_checkpoint(
         checkpoint_num=checkpoint_num, checkpoint_dir=checkpoint_dir, device=device
     )
 
@@ -67,7 +62,7 @@ def main(
     logger.info("Target Class: %s (%d)", target_class, label)
 
 
-def load_epoch(
+def load_checkpoint(
     checkpoint_num: int, checkpoint_dir: Path, device: torch.device
 ) -> torch.nn.Module:
     if not checkpoint_dir.exists() or not checkpoint_dir.is_dir():
@@ -93,10 +88,41 @@ def load_epoch(
     if not checkpoint_path.exists() or not checkpoint_path.is_file():
         raise RuntimeError(f"Checkpoint file {checkpoint_path} is missing or invalid")
 
-    model, _ = torch.load(checkpoint_path, weights_only=False)
+    checkpoint = torch.load(checkpoint_path, weights_only=False)
+
+    model = checkpoint["model"]
     model = model.to(device)
 
     return model
+
+
+@torch.inference_mode()
+def test_model(
+    model: torch.nn.Module,
+    test_data_loader: DataLoader,
+    num_features: int,
+    classes: list[str],
+    device: torch.device,
+) -> tuple[torch.Tensor, torch.Tensor, str, int, str, int]:
+    images, labels = next(iter(test_data_loader))
+
+    image = images[0]
+    image = image.to(device)
+    image = image.unsqueeze(0)
+    image = image.view(-1, num_features)
+    image = torch.where(image >= 0.5, torch.ones_like(image), torch.zeros_like(image))
+
+    label = labels[0]
+
+    output = model(image)
+    output_index = torch.argmax(output).item()
+    output_class = classes[output_index]
+    target_class = classes[label]
+
+    image = images[0]
+    image = torch.where(image >= 0.5, torch.ones_like(image), torch.zeros_like(image))
+
+    return image, output, output_class, output_index, target_class, label
 
 
 if __name__ == "__main__":
@@ -108,7 +134,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--data",
         type=str,
-        choices=["emnist_balanced", "emnist_letters", "emnist_digits"],
+        choices=["emnist_balanced", "emnist_digits", "emnist_letters"],
         default="emnist_digits",
     )
     parser.add_argument("--data_dir", type=Path, default="data")

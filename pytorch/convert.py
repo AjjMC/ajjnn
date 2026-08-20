@@ -31,7 +31,9 @@ def main(
     if not checkpoint_path.exists() or not checkpoint_path.is_file():
         raise RuntimeError(f"Checkpoint file {checkpoint_path} is missing or invalid")
 
-    model, _ = torch.load(checkpoint_path, weights_only=False)
+    checkpoint = torch.load(checkpoint_path, weights_only=False)
+
+    model = checkpoint["model"]
 
     if not isinstance(model, torch.nn.Sequential):
         raise RuntimeError("Model must be an instance of torch.nn.Sequential")

@@ -7,7 +7,7 @@ import torch
 from torch.utils.data import DataLoader
 
 from model import get_model
-from utils import calc_accuracy, get_data, get_data_loaders, get_num_features
+from utils import calc_accuracy, get_data
 
 
 def main(
@@ -22,19 +22,24 @@ def main(
 
     train_data, test_data = get_data(data=data, data_dir=data_dir)
 
-    train_data_loader, test_data_loader = get_data_loaders(
-        train_data=train_data, test_data=test_data, batch_size=batch_size
+    train_data_loader = DataLoader(
+        dataset=train_data, batch_size=batch_size, shuffle=True
     )
 
-    num_features = get_num_features(test_data=test_data)
+    test_data_loader = DataLoader(dataset=test_data, batch_size=batch_size)
+
+    num_features = (
+        test_data[0][0].shape[0] * test_data[0][0].shape[1] * test_data[0][0].shape[2]
+    )
 
     classes = test_data.classes
     num_classes = len(classes)
 
-    model, optimizer, checkpoint_num = laod_epoch(
+    model, optimizer, scheduler, checkpoint_num = load_checkpoint(
         data=data,
         num_features=num_features,
         num_classes=num_classes,
+        num_epochs=num_epochs,
         learning_rate=learning_rate,
         checkpoint_dir=checkpoint_dir,
         device=device,
@@ -49,6 +54,7 @@ def main(
     train_model(
         model=model,
         optimizer=optimizer,
+        scheduler=scheduler,
         train_data_loader=train_data_loader,
         test_data_loader=test_data_loader,
         num_features=num_features,
@@ -59,14 +65,17 @@ def main(
     )
 
 
-def laod_epoch(
+def load_checkpoint(
     data: str,
     num_features: int,
     num_classes: int,
+    num_epochs: int,
     learning_rate: float,
     checkpoint_dir: Path,
     device: torch.device,
-) -> tuple[torch.nn.Module, torch.optim.Optimizer, int]:
+) -> tuple[
+    torch.nn.Module, torch.optim.Optimizer, torch.optim.lr_scheduler.LRScheduler, int
+]:
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
     checkpoint_list = list(checkpoint_dir.glob("epoch_*.pt"))
@@ -78,22 +87,30 @@ def laod_epoch(
         model = get_model(data, num_features, num_classes)
         model = model.to(device)
 
-        optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+        optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+            optimizer, T_max=num_epochs
+        )
 
         checkpoint_num = 0
     else:
         checkpoint_path = checkpoint_list[-1]
 
-        model, optimizer = torch.load(checkpoint_path, weights_only=False)
+        checkpoint = torch.load(checkpoint_path, weights_only=False)
+
+        model = checkpoint["model"]
+        optimizer = checkpoint["optimizer"]
+        scheduler = checkpoint["scheduler"]
 
         checkpoint_num = int(checkpoint_path.name.split("_")[-1].split(".")[0]) + 1
 
-    return model, optimizer, checkpoint_num
+    return model, optimizer, scheduler, checkpoint_num
 
 
 def train_model(
     model: torch.nn.Module,
     optimizer: torch.optim.Optimizer,
+    scheduler: torch.optim.lr_scheduler.LRScheduler,
     train_data_loader: DataLoader,
     test_data_loader: DataLoader,
     num_features: int,
@@ -131,6 +148,8 @@ def train_model(
 
             avg_loss += loss.item()
 
+        scheduler.step()
+
         avg_loss /= len_data_loader
 
         accuracy = calc_accuracy(model, test_data_loader, num_features, device)
@@ -147,7 +166,10 @@ def train_model(
             duration,
         )
 
-        torch.save((model, optimizer), checkpoint_dir / f"epoch_{epoch}.pt")
+        torch.save(
+            {"model": model, "optimizer": optimizer, "scheduler": scheduler},
+            checkpoint_dir / f"epoch_{epoch}.pt",
+        )
 
     best_epoch, best_accuracy = max(enumerate(accuracies), key=lambda x: x[1])
     best_epoch += checkpoint_num
@@ -163,7 +185,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--data",
         type=str,
-        choices=["emnist_balanced", "emnist_letters", "emnist_digits"],
+        choices=["emnist_balanced", "emnist_digits", "emnist_letters"],
         default="emnist_digits",
     )
     parser.add_argument("--data_dir", type=Path, default="data")
